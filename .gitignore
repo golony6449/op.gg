@@ -1,3 +1,9 @@
 .idea/
 gamedata/migrations
 community/migrations
+community/__pycache__/
+gamedata/__pycache__/
+gamedata/module/__pycache__/
+opgg/__pycache__/
+opgg/keys/__pycache__/
+db.sqlite3

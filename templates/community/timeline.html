@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user }}님의 타임라인</title>
+</head>
+<body>
+<!-- 글 작성 -->
+<form action="{% url 'community:write_post' user.id %}" method="post">
+    {% csrf_token %}
+    <textarea class="form-control" name="content" rows="3" maxlength="120" placeholder="최대 120자입니다."></textarea>
+    <input type="submit" value="포스팅">
+</form>
+
+<!-- 글 목록 -->
+{% if data_list %}
+    <ul>
+    {% for data in data_list %}
+        <li id="post_{{ data.post.id }}"><div onclick="post_click({{ data.post.id }})">{{ data.post.content }}({{ data.post.date }})</div>
+            <div id="comment_{{ data.post.id }}" style="display:none">
+                <form action="{% url 'community:write_comment' data.post.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="content" maxlength="50" placeholder="최대 50자입니다.">
+                    <!--임시로 댓글작성자 설정(추후 로그인된 사용자정보로 변경)-->
+                    <input type="hidden" name="commenter_id" value="user1">
+                    <input type="submit" value="댓글쓰기">
+                </form>
+            </div>
+            <ul>
+                {% for comment in data.comments %}
+                    <li>{{ comment.commenter }} : {{ comment.content }}({{ comment.date }})</li>
+                {% empty %}
+                    <li>현재 작성된 댓글이 없습니다.</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>작성된 포스트가 없어요.</p>
+{% endif %}
+</body>
+<script>
+    //각 게시글 선택시 댓글입력창 상태 변경
+    function post_click(post_id) {
+        obj = document.getElementById('comment_'+post_id)
+        if (obj.style.display === "none") {
+            obj.style.display = "block";
+        } else {
+            obj.style.display = "none";
+        }
+    }
+</script>
+</html>
