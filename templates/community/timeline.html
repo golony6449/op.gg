@@ -2,15 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ user }}님의 타임라인</title>
+    <title>{{ page_user }}님의 타임라인</title>
 </head>
 <body>
+{% if user.is_authenticated and page_user.id == user %}
+    <form action="{% url 'write_post' user.username %}" method="post">
+        {% csrf_token %}
+        <textarea class="form-control" name="content" rows="3" maxlength="120" placeholder="최대 120자입니다."></textarea>
+        <input type="submit" value="포스팅">
+    </form>
+{% else %}
+    <p>본인의 타임라인에만 글 작성이 가능합니다.</p>
+{% endif %}
 <!-- 글 작성 -->
-<form action="{% url 'community:write_post' user.id %}" method="post">
-    {% csrf_token %}
-    <textarea class="form-control" name="content" rows="3" maxlength="120" placeholder="최대 120자입니다."></textarea>
-    <input type="submit" value="포스팅">
-</form>
+
 
 <!-- 글 목록 -->
 {% if data_list %}
@@ -18,13 +23,17 @@
     {% for data in data_list %}
         <li id="post_{{ data.post.id }}"><div onclick="post_click({{ data.post.id }})">{{ data.post.content }}({{ data.post.date }})</div>
             <div id="comment_{{ data.post.id }}" style="display:none">
-                <form action="{% url 'community:write_comment' data.post.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="text" name="content" maxlength="50" placeholder="최대 50자입니다.">
-                    <!--임시로 댓글작성자 설정(추후 로그인된 사용자정보로 변경)-->
-                    <input type="hidden" name="commenter_id" value="user1">
-                    <input type="submit" value="댓글쓰기">
-                </form>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'write_comment' data.post.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="content" maxlength="50" placeholder="최대 50자입니다.">
+                        <!--임시로 댓글작성자 설정(추후 로그인된 사용자정보로 변경)-->
+                        <input type="hidden" name="commenter_id" value="{{ user.username }}">
+                        <input type="submit" value="댓글쓰기">
+                    </form>
+                {% else %}
+                    <p>로그인 후 댓글작성이 가능합니다.</p>
+                {% endif %}
             </div>
             <ul>
                 {% for comment in data.comments %}
