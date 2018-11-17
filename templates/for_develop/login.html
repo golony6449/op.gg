@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h2>로그인 테스트 페이지 입니다.</h2>
+
+{% if user.is_authenticated %}
+    <h2>status: {{ user.username }} logined</h2>
+{% else %}
+    <h2>status: Not login</h2>
+{% endif %}
+
+<form action="{% url 'login' %}" method="post">
+    {% csrf_token %}
+    <p>id: <input type="text" name="id"></p>
+    <p>pw: <input type="password" name="pw"></p>
+    <input type="submit">
+</form>
+
+<p><a href="{% url 'logout' %}">logout</a></p>
+</body>
+</html>

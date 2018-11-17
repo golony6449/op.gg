@@ -22,4 +22,6 @@ urlpatterns = [
     path('<str:user_id>/write_post', views.write_post, name='write_post'),
     path('<str:user_id>/', views.timeline, name='timeline'),
     # path('/send_game_data', send_game_data, 'send_game_data'),
+    path('login', Login.as_view(), name='login'),
+    path('logout', Logout.as_view(), name='logout'),
 ]

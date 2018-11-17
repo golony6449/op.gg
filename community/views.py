@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -17,6 +18,13 @@ def timeline(request, user_id):
         'user': user,
     }
     return render(request, 'community/timeline.html', context)
+=======
+from django.shortcuts import render, redirect
+from django.views import View
+from django.contrib.auth import login , logout, authenticate
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+>>>>>>> upstream/master
 
 
 def community(request):
@@ -40,3 +48,26 @@ def write_comment(request, post_id):
 
 def read(request):
     pass
+
+
+class Login(View):
+    def get(self, request):
+        # er\for Test purpose
+        return render(request, 'for_develop/login.html')
+
+    def post(self, request):
+        user = authenticate(request, username=request.POST['id'], password=request.POST['pw'])
+
+        if user is None:
+            return HttpResponse('Fail')
+        else:
+            login(request, user)
+            return HttpResponse('Success')
+
+
+class Logout(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            logout(request)
+
+        return redirect('login')
