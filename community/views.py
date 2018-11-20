@@ -15,7 +15,7 @@ def timeline(request, user_id):
     except User.DoesNotExist:
         return HttpResponse('존재하지 않는 사용자 입니다.', status=400)
 
-    user = get_object_or_404(UserInfo, pk=user_obj)
+    user, is_new = UserInfo.objects.get_or_create(defaults={'nickname': user_id, 'email': '%s@opgg.com' % user_id}, id=user_obj)
     posts = Post.objects.filter(poster=user).order_by('-date')
     data = []
     for post in posts:
@@ -40,6 +40,14 @@ def write_post(request, user_id):
 
     user = get_object_or_404(UserInfo, pk=user_obj)
     Post.objects.create(content=request.POST['content'], poster=user, date=timezone.now())
+    return HttpResponseRedirect(reverse('timeline', args=(user_id,)))
+
+
+# 글 작성
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    user_id = post.poster.id.username
+    post.delete()
     return HttpResponseRedirect(reverse('timeline', args=(user_id,)))
 
 

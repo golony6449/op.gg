@@ -21,6 +21,7 @@ from . import views
 #app_name = 'community'
 urlpatterns = [
     path('<str:post_id>/write_comment', views.write_comment, name='write_comment'),
+    path('<str:post_id>/delete_post', views.delete_post, name='delete_post'),
     path('<str:user_id>/write_post', views.write_post, name='write_post'),
     path('<str:user_id>/', views.timeline, name='timeline'),
     # path('/send_game_data', send_game_data, 'send_game_data'),

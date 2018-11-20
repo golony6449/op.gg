@@ -21,7 +21,8 @@
 {% if data_list %}
     <ul>
     {% for data in data_list %}
-        <li id="post_{{ data.post.id }}"><div onclick="post_click({{ data.post.id }})">{{ data.post.content }}({{ data.post.date }})</div>
+        <li id="post_{{ data.post.id }}">
+            <div onclick="post_click({{ data.post.id }})">{{ data.post.content }}({{ data.post.date }}/<a href="{% url 'delete_post' data.post.id %}">delete</a>)</div>
             <div id="comment_{{ data.post.id }}" style="display:none">
                 {% if user.is_authenticated %}
                     <form action="{% url 'write_comment' data.post.id %}" method="post">
