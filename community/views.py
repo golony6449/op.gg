@@ -67,6 +67,8 @@ def write_comment(request, post_id):
 def read(request):
     pass
 
+def game(request):
+    return render(request, 'game/start.html')
 
 class Login(View):
     def get(self, request):

@@ -27,4 +27,5 @@ urlpatterns = [
     # path('/send_game_data', send_game_data, 'send_game_data'),
     path('login', Login.as_view(), name='login'),
     path('logout', Logout.as_view(), name='logout'),
+    path('game', game, name='game'),
 ]
