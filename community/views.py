@@ -1,10 +1,11 @@
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.views import View
+from django.core import serializers
 from .models import UserInfo, Post, Comment
 
 
@@ -67,8 +68,66 @@ def write_comment(request, post_id):
 def read(request):
     pass
 
+
 def game(request):
     return render(request, 'game/start.html')
+
+
+# jsonResponse 반환
+def make_json(data):
+    return JsonResponse(data, json_dumps_params={'ensure_ascii': False})
+
+
+# 글 목록 가져오기
+# 받아와야 하는 데이터 : user_id(아이디), item_num(한번에 받아올 포스트 개수), page(가져올 페이지)
+# 보내는 데이터 : code(성공(0)유무 코드번호), total_num(전체 게시글 개수), total_page(전체 페이지 개수), now_page(현재 페이지 번호),
+#           data:[{post:{id(포스트 고유번호), content(글 내용), date(작성일)}, comment:{content(댓글내용), commenter(댓글작성자), date(작성일)}}]
+class GetPost(View):
+    def get(self, request):
+        page = int(request.GET['page'])
+        item_num = int(request.GET['item_num'])
+        user_obj = User.objects.get(username=request.GET['user_id'])
+        user = UserInfo.objects.get(id=user_obj)
+        posts = Post.objects.filter(poster=user).order_by('-date')
+        total_num = len(posts)
+        total_page = total_num//item_num
+
+        if total_num%item_num != 0:
+            total_page += 1
+
+        if total_page < page:
+            return make_json({
+                'code': 1,
+                'total_num': total_num,
+                'total_page': total_page,
+                'now_page': page,
+            })
+        elif total_page == page:
+            posts = posts[(page-1)*item_num:]
+        else:
+            start_num = (page-1)*item_num
+            posts = posts[start_num:start_num+item_num]
+
+        data = []
+        for post in posts:
+            data.append({
+                'post': {'content': post.content, 'id': post.id, 'data': post.date},
+                'comments': list(Comment.objects.filter(post=post).order_by('date').values('content', 'commenter', 'date')[:5])
+            })
+
+        context = {
+            'code': 0,
+            'total_num': total_num,
+            'total_page': total_page,
+            'now_page': page,
+            'data': data
+        }
+
+        return make_json(context)
+
+    def post(self, request):
+        pass
+
 
 class Login(View):
     def get(self, request):

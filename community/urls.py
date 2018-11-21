@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from community.views import Login, Logout
+from community.views import Login, Logout, GetPost
 from . import views
 
 #app_name = 'community'
