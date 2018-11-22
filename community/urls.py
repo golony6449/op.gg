@@ -14,11 +14,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import *
 
+from community.views import Login, Logout, GetPost, GetComment, GetUserList
+from . import views
+
+# app_name = 'community'
 urlpatterns = [
+    path('<int:post_id>/write_comment', views.write_comment, name='write_comment'),
+    path('<int:post_id>/delete_post', views.delete_post, name='delete_post'),
+    path('<str:user_id>/write_post', views.write_post, name='write_post'),
+    path('<str:user_id>', views.timeline, name='timeline'),
     # path('/send_game_data', send_game_data, 'send_game_data'),
+    path('rest/getPost', GetPost.as_view(), name='getPost'),
+    path('rest/getComment', GetComment.as_view(), name='getComment'),
+    path('rest/getUserList', GetUserList.as_view(), name='getUserList'),
     path('login', Login.as_view(), name='login'),
     path('logout', Logout.as_view(), name='logout'),
-    path('game', game, name='game'),
+    # path('game', game, name='game'),
 ]
