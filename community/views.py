@@ -73,21 +73,37 @@ def game(request):
     return render(request, 'game/start.html')
 
 
-# jsonResponse 반환
-def make_json(data):
-    return JsonResponse(data, json_dumps_params={'ensure_ascii': False})
-
-
 # 글 목록 가져오기
 # 받아와야 하는 데이터 : user_id(아이디), item_num(한번에 받아올 포스트 개수), page(가져올 페이지)
 # 보내는 데이터 : code(성공(0)유무 코드번호), total_num(전체 게시글 개수), total_page(전체 페이지 개수), now_page(현재 페이지 번호),
 #           data:[{post:{id(포스트 고유번호), content(글 내용), date(작성일)}, comment:{content(댓글내용), commenter(댓글작성자), date(작성일)}}]
 class GetPost(View):
     def get(self, request):
-        page = int(request.GET['page'])
-        item_num = int(request.GET['item_num'])
-        user_obj = User.objects.get(username=request.GET['user_id'])
-        user = UserInfo.objects.get(id=user_obj)
+        return self.make_json(int(request.GET['page']), int(request.GET['item_num']), request.GET['user_id'])
+
+    def post(self, request):
+        return self.make_json(int(request.POST['page']), int(request.POST['item_num']), request.POST['user_id'])
+
+    def make_json(self, page, item_num, user_id):
+        # 올바르지 않은 사용자 접근 예외처리
+        try:
+            user_obj = User.objects.get(username=user_id)
+            user = UserInfo.objects.get(id=user_obj)
+        except User.DoesNotExist:
+            return JsonResponse({
+                'code': 2,
+                'total_num': -1,
+                'total_page': -1,
+                'now_page': page,
+            }, json_dumps_params={'ensure_ascii': False})
+        except UserInfo.DoesNotExist:
+            return JsonResponse({
+                'code': 3,
+                'total_num': -1,
+                'total_page': -1,
+                'now_page': page,
+            }, json_dumps_params={'ensure_ascii': False})
+
         posts = Post.objects.filter(poster=user).order_by('-date')
         total_num = len(posts)
         total_page = total_num//item_num
@@ -96,12 +112,12 @@ class GetPost(View):
             total_page += 1
 
         if total_page < page:
-            return make_json({
+            return JsonResponse({
                 'code': 1,
                 'total_num': total_num,
                 'total_page': total_page,
                 'now_page': page,
-            })
+            }, json_dumps_params={'ensure_ascii': False})
         elif total_page == page:
             posts = posts[(page-1)*item_num:]
         else:
@@ -110,9 +126,13 @@ class GetPost(View):
 
         data = []
         for post in posts:
+            _comments = Comment.objects.filter(post=post).order_by('date')[:5]
+            comments = []
+            for comment in _comments:
+                comments.append({'content': comment.content, 'commenter': comment.commenter.id.username, 'date': comment.date})
             data.append({
                 'post': {'content': post.content, 'id': post.id, 'data': post.date},
-                'comments': list(Comment.objects.filter(post=post).order_by('date').values('content', 'commenter', 'date')[:5])
+                'comments': comments
             })
 
         context = {
@@ -123,37 +143,56 @@ class GetPost(View):
             'data': data
         }
 
-        return make_json(context)
-
-    def post(self, request):
-        pass
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': False})
 
 
+# 댓글 목록 가져오기
+# 받아와야 하는 데이터 : post_id(글 고유번호), item_num(한번에 받아올 댓글 개수), page(가져올 페이지)
+# 보내는 데이터 : code(성공(0)유무 코드번호), total_num(전체 댓글 개수), total_page(전체 페이지 개수), now_page(현재 페이지 번호),
+#               data:[{content(댓글내용), commenter(댓글작성자), date(작성일)}]
 class GetComment(View):
     def get(self, request):
-        page = int(request.GET['page'])
-        item_num = int(request.GET['item_num'])
-        post_id = int(request.GET['post_id'])
-        post = Post.objects.get(pk=post_id)
-        comments = Comment.objects.filter(post=post).order_by('date').values('content', 'commenter', 'date')
-        total_num = len(comments)
-        total_page = total_num//item_num
+        return self.make_json(int(request.GET['page']), int(request.GET['item_num']), int(request.GET['post_id']))
 
-        if total_num%item_num != 0:
+    def post(self, request):
+        return self.make_json(int(request.POST['page']), int(request.POST['item_num']), int(request.POST['post_id']))
+
+    def make_json(self, page, item_num, post_id):
+        # 올바르지 않은 게시글 접근 예외처리
+        try:
+            post = Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            return JsonResponse({
+                'code': 2,
+                'total_num': -1,
+                'total_page': -1,
+                'now_page': page,
+            }, json_dumps_params={'ensure_ascii': False})
+
+        _comments = Comment.objects.filter(post=post).order_by('date')
+        total_num = len(_comments)
+        total_page = total_num // item_num
+
+        if total_num % item_num != 0:
             total_page += 1
 
         if total_page < page:
-            return make_json({
+            return JsonResponse({
                 'code': 1,
                 'total_num': total_num,
                 'total_page': total_page,
                 'now_page': page,
-            })
+            }, json_dumps_params={'ensure_ascii': False})
         elif total_page == page:
-            comments = comments[(page-1)*item_num:]
+            _comments = _comments[(page - 1) * item_num:]
         else:
-            start_num = (page-1)*item_num
-            comments = comments[start_num:start_num+item_num]
+            start_num = (page - 1) * item_num
+            _comments = _comments[start_num:start_num + item_num]
+
+        comments = []
+        for comment in _comments:
+            comments.append(
+                {'content': comment.content, 'commenter': comment.commenter.id.username, 'date': comment.date})
 
         data = list(comments)
 
@@ -165,10 +204,7 @@ class GetComment(View):
             'data': data
         }
 
-        return make_json(context)
-
-    def post(self, request):
-        pass
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': False})
 
 
 class Login(View):

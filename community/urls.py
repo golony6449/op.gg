@@ -18,15 +18,16 @@ from django.urls import path
 from community.views import Login, Logout, GetPost, GetComment
 from . import views
 
-#app_name = 'community'
+# app_name = 'community'
 urlpatterns = [
-    path('<str:post_id>/write_comment', views.write_comment, name='write_comment'),
-    path('<str:post_id>/delete_post', views.delete_post, name='delete_post'),
+    path('<int:post_id>/write_comment', views.write_comment, name='write_comment'),
+    path('<int:post_id>/delete_post', views.delete_post, name='delete_post'),
     path('<str:user_id>/write_post', views.write_post, name='write_post'),
-    path('<str:user_id>/', views.timeline, name='timeline'),
+    path('<str:user_id>', views.timeline, name='timeline'),
     # path('/send_game_data', send_game_data, 'send_game_data'),
-    path('getPost', GetPost.as_view(), name='getPost'),
-    path('getComment', GetComment.as_view(), name='getComment'),
+    path('rest/getPost', GetPost.as_view(), name='getPost'),
+    path('rest/getComment', GetComment.as_view(), name='getComment'),
+    # path('rest/getUserList', GetComment.as_view(), name='getComment'),
     path('login', Login.as_view(), name='login'),
     path('logout', Logout.as_view(), name='logout'),
     # path('game', game, name='game'),
