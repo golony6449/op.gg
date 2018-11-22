@@ -129,6 +129,48 @@ class GetPost(View):
         pass
 
 
+class GetComment(View):
+    def get(self, request):
+        page = int(request.GET['page'])
+        item_num = int(request.GET['item_num'])
+        post_id = int(request.GET['post_id'])
+        post = Post.objects.get(pk=post_id)
+        comments = Comment.objects.filter(post=post).order_by('date').values('content', 'commenter', 'date')
+        total_num = len(comments)
+        total_page = total_num//item_num
+
+        if total_num%item_num != 0:
+            total_page += 1
+
+        if total_page < page:
+            return make_json({
+                'code': 1,
+                'total_num': total_num,
+                'total_page': total_page,
+                'now_page': page,
+            })
+        elif total_page == page:
+            comments = comments[(page-1)*item_num:]
+        else:
+            start_num = (page-1)*item_num
+            comments = comments[start_num:start_num+item_num]
+
+        data = list(comments)
+
+        context = {
+            'code': 0,
+            'total_num': total_num,
+            'total_page': total_page,
+            'now_page': page,
+            'data': data
+        }
+
+        return make_json(context)
+
+    def post(self, request):
+        pass
+
+
 class Login(View):
     def get(self, request):
         # er\for Test purpose
