@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from community.views import Login, Logout, GetPost, GetComment
+from community.views import Login, Logout, GetPost, GetComment, GetUserList
 from . import views
 
 # app_name = 'community'
@@ -27,7 +27,7 @@ urlpatterns = [
     # path('/send_game_data', send_game_data, 'send_game_data'),
     path('rest/getPost', GetPost.as_view(), name='getPost'),
     path('rest/getComment', GetComment.as_view(), name='getComment'),
-    # path('rest/getUserList', GetComment.as_view(), name='getComment'),
+    path('rest/getUserList', GetUserList.as_view(), name='getUserList'),
     path('login', Login.as_view(), name='login'),
     path('logout', Logout.as_view(), name='logout'),
     # path('game', game, name='game'),

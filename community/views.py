@@ -129,7 +129,7 @@ class GetPost(View):
             _comments = Comment.objects.filter(post=post).order_by('date')[:5]
             comments = []
             for comment in _comments:
-                comments.append({'content': comment.content, 'commenter': comment.commenter.id.username, 'date': comment.date})
+                comments.append({'content': comment.content, 'commenter': comment.commenter.make_dict(), 'date': comment.date})
             data.append({
                 'post': {'content': post.content, 'id': post.id, 'data': post.date},
                 'comments': comments
@@ -192,7 +192,7 @@ class GetComment(View):
         comments = []
         for comment in _comments:
             comments.append(
-                {'content': comment.content, 'commenter': comment.commenter.id.username, 'date': comment.date})
+                {'content': comment.content, 'commenter': comment.commenter.make_dict(), 'date': comment.date})
 
         data = list(comments)
 
@@ -205,6 +205,26 @@ class GetComment(View):
         }
 
         return JsonResponse(context, json_dumps_params={'ensure_ascii': False})
+
+
+# 키워드가 포함된 아이디 혹은 닉네임을 가지는 유저목록검색
+# 받아와야하는 데이터 : keyword(검색 키워드)
+# 보내는 데이터 : data:[{id(유저 아이디), email(이메일), nickname(닉네임), profile(프로필 사진주소)}]
+class GetUserList(View):
+    def get(self, request):
+        return self.make_json(request.GET['keyword'])
+
+    def post(self, request):
+        return self.make_json(request.POST['keyword'])
+
+    def make_json(self, keyword):
+        users = User.objects.filter(username__contains=keyword)
+        data = []
+        for user in users:
+            userinfo = UserInfo.objects.get(pk=user)
+            data.append(userinfo.make_dict())
+
+        return JsonResponse({'data': data}, json_dumps_params={'ensure_ascii': False})
 
 
 class Login(View):

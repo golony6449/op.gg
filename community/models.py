@@ -7,10 +7,19 @@ from django.conf import settings
 class UserInfo(models.Model):
     id = models.OneToOneField(settings.AUTH_USER_MODEL, models.CASCADE, primary_key=True)
     email = models.EmailField(blank=False, unique=True, null=False)
-    nickname = models.CharField(max_length=10, null=False)
+    nickname = models.CharField(max_length=10, null=True)
+    profile = models.ImageField(blank=True, upload_to="profile")
 
     def __str__(self):
         return self.nickname
+
+    def make_dict(self):
+        if self.profile.name:
+            profile = self.profile.path
+        else:
+            profile = False
+
+        return {'id': self.id.username, 'email': self.email, 'nickname': self.nickname, 'profile': profile}
 
 
 # 게시글 테이블
