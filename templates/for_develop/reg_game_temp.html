@@ -10,7 +10,7 @@
 <p>개발용 입니다.</p>
 <a href="{% url 'test' %}">결과 페이지</a>
 
-<form action="{% url 'reg_game_data_temp' %}" method="post">
+<form action="{% url 'reg_page_temp' %}" method="post">
     {% csrf_token %}
     <p>게임 이름: <input type="text" name="game_name"></p>
     <p>점수 유형: <input type="text" name="score_type"></p>

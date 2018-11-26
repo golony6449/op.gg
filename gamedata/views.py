@@ -1,3 +1,4 @@
+from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
@@ -38,22 +39,22 @@ def register_game_data(request):
 
 
 # For development
-def register_page_temp(request):
-    return render(request, 'for_develop/reg_game_temp.html')
+class RegisterTemp(View):
+    def get(self, request):
+        return render(request, 'for_develop/reg_game_temp.html')
 
+    def post(self, request):
+        generator = KeyGenerator()
 
-def register_game_data_temp(request):
-    generator = KeyGenerator()
+        new_gamedata = Gamedata()
+        new_gamedata.game_name = request.POST['game_name']
+        new_gamedata.score_type = request.POST['score_type']
+        new_gamedata.api_key = generator.key_gen()
+        new_gamedata.admin_name = request.user
 
-    new_gamedata = Gamedata()
-    new_gamedata.game_name = request.POST['game_name']
-    new_gamedata.score_type = request.POST['score_type']
-    new_gamedata.api_key = generator.key_gen()
-    new_gamedata.admin_name = 'temp'
+        new_gamedata.save()
 
-    new_gamedata.save()
-
-    return redirect(test)
+        return redirect(test)
 
 
 def sync(request):
