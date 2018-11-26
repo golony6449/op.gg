@@ -130,3 +130,64 @@ profile | url | 사용자 프로필 이미지 주소
 
     없음
     
+## Gamedata 관련
+### /gamedata/register
+* 게임 등록
+
+* GET DATA
+
+    데이터 명 | 타입 | 설명
+    ------------ | ------------- | -------------
+    game_name | str | 게임이름
+    score_type | str | 점수 유형
+
+* REST DATA
+
+    데이터 명 | 타입 | 설명
+    ------------ | ------------- | -------------
+    code | int | 상태 정보
+    msg | int | 메세지
+    
+### /gamedata/sync
+* 레더정보 등록
+
+* GET DATA
+
+    데이터 명 | 타입 | 설명
+    ------------ | ------------- | -------------
+    api_key | str | api 키
+    score | int | 연동할 점수
+    player_id | str | 사용자 ID
+
+* REST DATA
+
+    데이터 명 | 타입 | 설명
+    ------------ | ------------- | -------------
+    code | int | 요청 결과 코드 (0:정상)
+    msg | int | 메시지
+
+    
+### /gamedata/request
+* 유저가 가장 최근 플레이한 10개의 레더 정보 요청
+
+* GET DATA
+
+    데이터 명 | 타입 | 설명
+    ------------ | ------------- | -------------
+    player_id | str | 요청할 사용자 ID
+
+* REST DATA
+
+    데이터 명 | 타입 | 설명
+    ------------ | ------------- | -------------
+    code | int | 요청 결과 코드 (0:정상)
+    game_title | str | 게임제목
+    score | int | 점수
+    
+### /gamedata/test
+* 테스트용 URL
+* 등록된 모든 레더 정보, 게임 정보 확인 가능
+
+### /gamedata/reg_page_temp
+* 테스트용 URL
+* 게임정보 등록 가능

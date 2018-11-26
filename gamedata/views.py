@@ -15,21 +15,26 @@ def register_game_data(request):
         return HttpResponse('Not authorized', status=400)
 
     generator = KeyGenerator()
-    income = json.dump(request.body)
+    # income = json.dump(request.body)
 
     new_gamedata = Gamedata()
-    new_gamedata.game_name = income['game_name']
-    new_gamedata.score_type = income['score_type']
+    # new_gamedata.game_name = income['game_name']
+    # new_gamedata.score_type = income['score_type']
+    new_gamedata.game_name = request.GET['game_name']
+    new_gamedata.score_type = request.GET['score_type']
     new_gamedata.api_key = generator.key_gen()
 
     try:
-        user_obj = User.objects.find(income['id'])
+        # user_obj = User.objects.find(income['id'])
+        user_obj = User.objects.find(request.GET['id'])
     except User.DoesNotExist:
-        return HttpResponse('Incorrect ID', status=400)
+        # return HttpResponse('Incorrect ID', status=400)
+        return JsonResponse({'code': 400, 'msg':'Incorrect ID'}, status=400)
 
     new_gamedata.admin_name = user_obj
 
-    return HttpResponse('Successfully registered')
+    # return HttpResponse('Successfully registered')
+    return JsonResponse({'code': 200, 'msg': 'Successfully register'})
 
 
 # For development
@@ -52,25 +57,28 @@ def register_game_data_temp(request):
 
 
 def sync(request):
-    income = json.dumps(request.body)
+    # income = json.dumps(request.body)
 
     # 예외처리
-    if check_sync_data(income) is False:
-        return JsonResponse({'message': 'Wrong or Missing key'}, status=400)
+    if check_sync_data(request.GET) is False:
+        return JsonResponse({'code': 400, 'message': 'Wrong or Missing key'}, status=400)
 
     new_ladder_data = Ladder()
-    new_ladder_data.game_index = Gamedata.objects.find(income['api_key'])
-    new_ladder_data.score = income['score']
+    # new_ladder_data.game_index = Gamedata.objects.find(income['api_key'])
+    # new_ladder_data.score = income['score']
+    new_ladder_data.game_index = Gamedata.objects.find(request.GET['api_key'])
+    new_ladder_data.score = request.GET['score']
 
     try:
-        user_obj = User.objects.get(username=income['player_id'])
+        # user_obj = User.objects.get(username=income['player_id'])
+        user_obj = User.objects.get(username=request.GET['player_id'])
     except User.DoesNotExist:
-        return JsonResponse({'message': 'Wrong User name'}, status=400)
+        return JsonResponse({'code': 400, 'message': 'Wrong User name'}, status=400)
     new_ladder_data.player_id = user_obj
 
     new_ladder_data.save()
 
-    return JsonResponse({'message': 'Successfully synced'})
+    return JsonResponse({'code': 200, 'message': 'Successfully synced'})
 
 
 def test(request):
@@ -81,11 +89,12 @@ def test(request):
 
 
 def request_ladder_data(request):
-    income = json.dumps(request.body)
+    # income = json.dumps(request.body)
 
-    ladder_info_list = Ladder.objects.filter(player_id=income['player_id'])[:10]
+    # ladder_info_list = Ladder.objects.filter(player_id=income['player_id'])[:10]
+    ladder_info_list = Ladder.objects.filter(player_id=request.GET['player_id'])[:10]
     result = dict()
     for index, info in enumerate(ladder_info_list):
-        result[index] = {'game_title': info.game_index.game_name, 'score': info.score}
+        result[index] = {'code': 200, 'game_title': info.game_index.game_name, 'score': info.score}
 
     return JsonResponse(result)
