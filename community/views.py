@@ -227,6 +227,20 @@ class GetUserList(View):
         return JsonResponse({'data': data}, json_dumps_params={'ensure_ascii': False})
 
 
+class AuthLogin(View):
+    def get(self, request):
+        return JsonResponse({'code': 1, 'msg': '지원하지 않는 방식입니다.'}, json_dumps_params={'ensure_ascii': False})
+
+    def post(self, request):
+        user = authenticate(request, username=request.POST['id'], password=request.POST['pw'])
+
+        if user is None:
+            return JsonResponse({'code': 2, 'msg': '일치하는 계정이 없습니다.'}, json_dumps_params={'ensure_ascii': False})
+        else:
+            login(request, user)
+            return JsonResponse({'code': 0, 'id': user, 'token': request.session._SessionBase__session_key}, json_dumps_params={'ensure_ascii': False})
+
+
 class Login(View):
     def get(self, request):
         # er\for Test purpose
