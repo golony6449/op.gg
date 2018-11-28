@@ -70,7 +70,7 @@ def read(request):
 
 
 def game(request):
-    return render(request, 'game/start.html')
+    return render(request, 'game/opening.html')
 
 
 # 글 목록 가져오기

@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'gamedata',
     'community',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # CORS 모듈
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -132,7 +134,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'community/static'),
 )
@@ -140,3 +142,7 @@ STATICFILES_DIRS = (
 # Media files - 업로드를 하는 URL과 디렉토리 설정
 MEDIA_URL = '/files/' # 업로드 할 경로
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads') #로컬 디렉토리 어디에 저장할 것인지
+
+# CORS 설정
+CORS_ALLOW_CREDENTIALS = False
+CORS_ORIGIN_ALLOW_ALL = True

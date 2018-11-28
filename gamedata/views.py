@@ -2,6 +2,7 @@ from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from gamedata.models import *
 import json
 
@@ -56,7 +57,7 @@ class RegisterTemp(View):
 
         return redirect(test)
 
-
+@csrf_exempt
 def sync(request):
     # income = json.dumps(request.body)
 
