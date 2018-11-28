@@ -6,8 +6,9 @@
 </head>
 <body>
 {% if user.is_authenticated and page_user.id == user %}
-    <form action="{% url 'write_post' user.username %}" method="post">
-        {% csrf_token %}
+    <form action="{% url 'writePost' %}" method="post">
+        <input type="hidden" name="id" value="{{ user.username }}">
+        <input type="hidden" name="token" value="{{ token }}">
         <textarea class="form-control" name="content" rows="3" maxlength="120" placeholder="최대 120자입니다."></textarea>
         <input type="submit" value="포스팅">
     </form>
