@@ -4,8 +4,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.utils.decorators import method_decorator
 from django.views import View
-from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import UserInfo, Post, Comment
 
 
@@ -24,6 +26,7 @@ def timeline(request, user_id):
     context = {
         'data_list': data,
         'page_user': user,
+        'token': request.session._SessionBase__session_key
     }
     return render(request, 'community/timeline.html', context)
 
@@ -32,19 +35,7 @@ def community(request):
     pass
 
 
-# 글 작성
-def write_post(request, user_id):
-    try:
-        user_obj = User.objects.get(username=user_id)
-    except User.DoesNotExist:
-        return HttpResponse('존재하지 않는 사용자 입니다.', status=400)
-
-    user = get_object_or_404(UserInfo, pk=user_obj)
-    Post.objects.create(content=request.POST['content'], poster=user, date=timezone.now())
-    return HttpResponseRedirect(reverse('timeline', args=(user_id,)))
-
-
-# 글 작성
+# 글 삭제
 def delete_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     user_id = post.poster.id.username
@@ -71,6 +62,28 @@ def read(request):
 
 def game(request):
     return render(request, 'game/start.html')
+
+
+class WritePost(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(WritePost, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request):
+        return JsonResponse({'code': 1, 'msg': '지원하지 않는 방식입니다.'}, json_dumps_params={'ensure_ascii': False})
+
+    def post(self, request):
+        if request.POST['token'] != request.session._SessionBase__session_key :
+            return JsonResponse({'code': 2, 'msg': '잘못된 접근입니다.('+request.POST['token']+'/'+request.session._SessionBase__session_key}, json_dumps_params={'ensure_ascii': False})
+        try:
+            user_obj = User.objects.get(username=request.POST['id'])
+        except User.DoesNotExist:
+            return JsonResponse({'code': 3, 'msg': '존재하지 않는 사용자입니다.'}, json_dumps_params={'ensure_ascii': False})
+
+        user, is_new = UserInfo.objects.get_or_create(
+            defaults={'nickname': user_obj.username, 'email': '%s@opgg.com' % user_obj.username}, id=user_obj)
+        Post.objects.create(content=request.POST['content'], poster=user, date=timezone.now())
+        return JsonResponse({'code': 0, 'msg': '성공'}, json_dumps_params={'ensure_ascii': False})
 
 
 # 글 목록 가져오기
