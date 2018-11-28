@@ -255,10 +255,12 @@ class AuthLogin(View):
 
 
 class Login(View):
+    @csrf_exempt
     def get(self, request):
         # er\for Test purpose
         return render(request, 'for_develop/login.html')
 
+    @csrf_exempt
     def post(self, request):
         user = authenticate(request, username=request.POST['id'], password=request.POST['pw'])
 
