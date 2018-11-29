@@ -3,30 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>테스트용</title>
+
+    <style>
+      table {
+        width: 100%;
+        border: 1px solid #444444;
+      }
+      th, td {
+        border: 1px solid #444444;
+      }
+    </style>
 </head>
 <body>
 
 <a href="{% url 'reg_page_temp' %}">게임 등록 페이지 (임시)</a>
 
 <h2>Ladder table 정보</h2>
-{% for data in all_data %}
-    <p>
-        data idx: {{ data.index }}
-        game idx: {{ data.game_index.game_name }}
-        score: {{ data.score }}
-        player id: {{ data.player_id }}
-    </p>
 
+<table>
+    <th>data idx</th>
+    <th>game idx</th>
+    <th>score</th>
+    <th>player id</th>
+
+{% for data in all_data %}
+    <td>{{ data.index }}</td>
+    <td>{{ data.game_index.game_name }}</td>
+    <td>{{ data.score }}</td>
+    <td>{{ data.player_id }}</td>
 {% endfor %}
 
+</table>
+
 <h2>Gamedata table 정보</h2>
+<table>
+    <tr>
+        <th>game idx</th>
+        <th>game name</th>
+        <th>api_key</th>
+        <th>admin name</th>
+    </tr>
+
 {% for data in all_game_data %}
-<p>
-    game idx: {{ data.index }}
-    game name: {{ data.game_name }}
-    score type: {{ data.api_key }}
-    admin name: {{ data.admin_name }}
-</p>
+    <td>{{ data.index }}</td>
+    <td>{{  data.game_name }}</td>
+    <td>{{ data.api_key }}</td>
+    <td>{{ data.admin_name }}</td>
 {% endfor %}
 
 </table>
