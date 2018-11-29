@@ -27,6 +27,7 @@ class Post(models.Model):
     content = models.CharField(max_length=120, null=False)
     poster = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
     date = models.DateTimeField('date published')
+    game_data = models.OneToOneField('gamedata.Ladder', on_delete=models.CASCADE, null=True)
 
 
 # 댓글 테이블
