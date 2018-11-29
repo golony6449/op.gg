@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from gamedata.models import *
+from community.models import *
 import json
 
 from .module.key_generator import KeyGenerator
@@ -65,6 +66,7 @@ def sync(request):
     if check_sync_data(request.GET) is False:
         return JsonResponse({'code': 400, 'message': 'Wrong or Missing key'}, status=400)
 
+    # 레더 정보 추가
     new_ladder_data = Ladder()
     # new_ladder_data.game_index = Gamedata.objects.find(income['api_key'])
     # new_ladder_data.score = income['score']
@@ -75,10 +77,19 @@ def sync(request):
         # user_obj = User.objects.get(username=income['player_id'])
         user_obj = User.objects.get(username=request.GET['player_id'])
     except User.DoesNotExist:
-        return JsonResponse({'code': 400, 'message': 'Wrong User name'}, status=400)
+        return JsonResponse({'code': 401, 'message': 'Wrong User name'}, status=401)
     new_ladder_data.player_id = user_obj
 
     new_ladder_data.save()
+
+    # 글 목록 추가
+    new_post = Post()
+    new_post.content = request.GET['content']
+
+    user = User.objects.get(username=request.GET['username'])
+    new_post.id = UserInfo.objects.get(user)
+    new_post.game_data = new_ladder_data
+    new_post.save()
 
     return JsonResponse({'code': 200, 'message': 'Successfully synced'})
 
