@@ -26,7 +26,7 @@ class UserInfo(models.Model):
 class Post(models.Model):
     content = models.CharField(max_length=120, null=False)
     poster = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
-    date = models.DateTimeField('date published')
+    date = models.DateTimeField('date published', auto_now_add=True)
     game_data = models.OneToOneField('gamedata.Ladder', on_delete=models.CASCADE, null=True)
 
 
