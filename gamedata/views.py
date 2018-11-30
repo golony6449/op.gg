@@ -60,22 +60,28 @@ class RegisterTemp(View):
 
 @csrf_exempt
 def sync(request):
-    # income = json.dumps(request.body)
+    # income = json.dumps(request.POST)
 
+    for i in request.POST.keys():
+        print('{}: \t {}'.format(i, request.POST[i]))
     # 예외처리
-    if check_sync_data(request.GET) is False:
-        return JsonResponse({'code': 400, 'message': 'Wrong or Missing key'}, status=400)
+    # if check_sync_data(request.POST) is False:
+    #     return JsonResponse({'code': 400, 'message': 'Wrong or Missing key'}, status=400)
 
     # 레더 정보 추가
     new_ladder_data = Ladder()
     # new_ladder_data.game_index = Gamedata.objects.find(income['api_key'])
     # new_ladder_data.score = income['score']
-    new_ladder_data.game_index = Gamedata.objects.find(request.GET['api_key'])
-    new_ladder_data.score = request.GET['score']
+    try:
+        new_ladder_data.game_index = Gamedata.objects.find(request.POST['api_key'])
+    except AttributeError:
+        return JsonResponse({'code': 403, 'message': 'Wrong API Key'}, status=403)
+
+    new_ladder_data.score = request.POST['score']
 
     try:
         # user_obj = User.objects.get(username=income['player_id'])
-        user_obj = User.objects.get(username=request.GET['player_id'])
+        user_obj = User.objects.get(username=request.POST['player_id'])
     except User.DoesNotExist:
         return JsonResponse({'code': 401, 'message': 'Wrong User name'}, status=401)
     new_ladder_data.player_id = user_obj
@@ -84,9 +90,9 @@ def sync(request):
 
     # 글 목록 추가
     new_post = Post()
-    new_post.content = request.GET['content']
+    new_post.content = request.POST['content']
 
-    user = User.objects.get(username=request.GET['username'])
+    user = User.objects.get(username=request.POST['username'])
     new_post.id = UserInfo.objects.get(user)
     new_post.game_data = new_ladder_data
     new_post.save()
