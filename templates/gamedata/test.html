@@ -21,10 +21,13 @@
 <h2>Ladder table 정보</h2>
 
 <table>
-    <th>data idx</th>
-    <th>game idx</th>
-    <th>score</th>
-    <th>player id</th>
+    <tr>
+        <th>data idx</th>
+        <th>game idx</th>
+        <th>score</th>
+        <th>player id</th>
+    </tr>
+
 
 {% for data in all_data %}
     <td>{{ data.index }}</td>
@@ -45,10 +48,12 @@
     </tr>
 
 {% for data in all_game_data %}
-    <td>{{ data.index }}</td>
-    <td>{{  data.game_name }}</td>
-    <td>{{ data.api_key }}</td>
-    <td>{{ data.admin_name }}</td>
+    <tr>
+        <td>{{ data.index }}</td>
+        <td>{{  data.game_name }}</td>
+        <td>{{ data.api_key }}</td>
+        <td>{{ data.admin_name }}</td>
+    </tr>
 {% endfor %}
 
 </table>
