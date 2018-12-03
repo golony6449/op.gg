@@ -1,0 +1,17 @@
+*,
+*::before,
+*::after {
+  box-sizing: content-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -ms-overflow-style: scrollbar;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background-color: #dee2e6;
+}

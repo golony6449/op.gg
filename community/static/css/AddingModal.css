@@ -1,0 +1,35 @@
+.signup {
+  position: absolute;
+  bottom: 2em;
+  left: 21em;
+  font-weight: 500;
+  background-color: #38d9a9;
+  color: white;
+}
+
+.modal-body .form-wrapper {
+  width: inherit;
+  padding: 0 2rem 0 2rem;
+}
+.input-img {
+  visibility: hidden;
+  width: 1px;
+}
+.modal-body .form-group-control {
+  position: absolute;
+  top: 4em;
+  right: 6em;
+  margin: 0%;
+}
+.form-group-control label {
+  font-weight: 700;
+}
+.modal-body .form-group {
+  padding-right: 0;
+}
+
+.form-group .btn {
+  padding: 0;
+}
+.modal-footer {
+}
