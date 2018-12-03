@@ -9,6 +9,7 @@ class Gamedata(models.Model):
     score_type = models.CharField(max_length=10)
     api_key = models.CharField(max_length=50)
     admin_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    image = models.ImageField()
 
 
 class Ladder(models.Model):
