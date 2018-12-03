@@ -272,3 +272,8 @@ class Logout(View):
             logout(request)
 
         return redirect('login')
+
+
+def search(request):
+    # TODO: 검색기능 구현
+    print(request.GET['keyword'])
