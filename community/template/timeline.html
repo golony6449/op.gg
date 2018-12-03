@@ -57,7 +57,7 @@
       <div class="profile-top">
         <img
           {% if page_user.profile %}
-          src={{ page_user.profile }}
+          src={{ page_user.profile.url }}
           {% else %}
           src="https://react.semantic-ui.com/images/wireframe/image.png"
           {% endif %}
