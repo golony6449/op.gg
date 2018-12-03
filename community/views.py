@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import UserInfo, Post, Comment
+from .models import UserInfo, Post, Comment, Follow
 
 
 # 유저 개인 타임라인
@@ -18,17 +18,22 @@ def timeline(request, user_id):
     except User.DoesNotExist:
         return HttpResponse('존재하지 않는 사용자 입니다.', status=400)
 
-    user, is_new = UserInfo.objects.get_or_create(defaults={'nickname': user_id, 'email': '%s@opgg.com' % user_id}, id=user_obj)
+    user = UserInfo.objects.get(id=user_obj)
     posts = Post.objects.filter(poster=user).order_by('-date')
     data = []
     for post in posts:
         data.append({'post': post, 'comments': Comment.objects.filter(post=post).order_by('date')})
+
+    following = len(Follow.objects.filter(following=user))
+    follower = len(Follow.objects.filter(follower=user))
+
     context = {
         'data_list': data,
         'page_user': user,
-        'token': request.session._SessionBase__session_key
+        'following': following,
+        'follower': follower
     }
-    return render(request, 'community/timeline.html', context)
+    return render(request, 'timeline.html', context)
 
 
 def community(request):
@@ -65,25 +70,18 @@ def game(request):
 
 
 class WritePost(View):
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(WritePost, self).dispatch(request, *args, **kwargs)
-
     def get(self, request):
-        return JsonResponse({'code': 1, 'msg': '지원하지 않는 방식입니다.'}, json_dumps_params={'ensure_ascii': False})
+        return redirect('login')
 
     def post(self, request):
-        if request.POST['token'] != request.session._SessionBase__session_key :
-            return JsonResponse({'code': 2, 'msg': '잘못된 접근입니다.('+request.POST['token']+'/'+request.session._SessionBase__session_key}, json_dumps_params={'ensure_ascii': False})
-        try:
-            user_obj = User.objects.get(username=request.POST['id'])
-        except User.DoesNotExist:
-            return JsonResponse({'code': 3, 'msg': '존재하지 않는 사용자입니다.'}, json_dumps_params={'ensure_ascii': False})
-
-        user, is_new = UserInfo.objects.get_or_create(
-            defaults={'nickname': user_obj.username, 'email': '%s@opgg.com' % user_obj.username}, id=user_obj)
-        Post.objects.create(content=request.POST['content'], poster=user, date=timezone.now())
-        return JsonResponse({'code': 0, 'msg': '성공'}, json_dumps_params={'ensure_ascii': False})
+        if request.user.is_authenticated:
+            try:
+                user = UserInfo.objects.get(id=request.user)
+            except UserInfo.DoesNotExist:
+                return redirect('timeline', request.user.username)
+            Post.objects.create(content=request.POST['content'], poster=user, date=timezone.now())
+            return redirect('timeline', request.user.username)
+        return redirect('login')
 
 
 # 글 목록 가져오기
@@ -240,35 +238,32 @@ class GetUserList(View):
         return JsonResponse({'data': data}, json_dumps_params={'ensure_ascii': False})
 
 
-class AuthLogin(View):
+class SignUp(View):
     def get(self, request):
-        return JsonResponse({'code': 1, 'msg': '지원하지 않는 방식입니다.'}, json_dumps_params={'ensure_ascii': False})
+        return render(request, 'Auth/Auth.html')
 
     def post(self, request):
-        user = authenticate(request, username=request.POST['id'], password=request.POST['pw'])
+        user = User.objects.create_user(request.POST['id'], request.POST['email'], request.POST['pw'])
+        user.save()
+        UserInfo.objects.create(id=user, nickname=request.POST['nickname'])
 
-        if user is None:
-            return JsonResponse({'code': 2, 'msg': '일치하는 계정이 없습니다.'}, json_dumps_params={'ensure_ascii': False})
-        else:
-            login(request, user)
-            return JsonResponse({'code': 0, 'id': user, 'token': request.session._SessionBase__session_key}, json_dumps_params={'ensure_ascii': False})
+        return render(request, 'Auth/Auth.html')
 
 
 class Login(View):
-    @csrf_exempt
     def get(self, request):
-        # er\for Test purpose
-        return render(request, 'for_develop/login.html')
+        if request.user.is_authenticated:
+            return redirect('timeline', request.user.username)
+        return render(request, 'Auth/Auth.html')
 
-    @csrf_exempt
     def post(self, request):
         user = authenticate(request, username=request.POST['id'], password=request.POST['pw'])
 
         if user is None:
-            return HttpResponse('Fail')
+            return render(request, 'Auth/Auth.html')
         else:
             login(request, user)
-            return HttpResponse('Success')
+            return redirect('timeline', user.username)
 
 
 class Logout(View):

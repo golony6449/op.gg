@@ -8,4 +8,3 @@ opgg/__pycache__/
 opgg/keys/__pycache__/
 db.sqlite3
 opgg/keys/keys.json
-static
