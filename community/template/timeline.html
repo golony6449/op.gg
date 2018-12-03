@@ -43,6 +43,12 @@
       integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
       crossorigin="anonymous"
     />
+      <script>
+          function searchRequest(){
+              keyword = $('#search_keyword').val();
+              window.location.href = '/search?keyword='+keyword;
+          }
+      </script>
   </head>
 
   <body>
@@ -77,6 +83,7 @@
         <div class="input-group">
           <input
             type="text"
+            id="search_keyword"
             class="form-control"
             aria-label="Recipient's username"
             aria-describedby="button-addon2"
@@ -86,6 +93,7 @@
               class="btn btn-outline-primary"
               type="button"
               id="button-addon2"
+              onclick="window.location.href='search?keyword='+$('#search_keyword').val()"
             >
               <i class="fa fa-search"></i>
             </button>
@@ -114,7 +122,7 @@
                 <div class="h5">{{ following }} </div>
               </li>
             </ul>
-          </div>
+          </div>ㅑ
         </div>
         <div class="col-md-6 gedf-main">
           <div class="gedf-card-input">
