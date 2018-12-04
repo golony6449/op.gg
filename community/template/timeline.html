@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Page Title</title>
+    <title>{{ title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- CSS -->
     <link rel="stylesheet" href="../static/css/Default.css" />
@@ -244,6 +244,8 @@
         </div>
         <div class="col-md-3">
           <div class="card gedf-card">
+          <!-- 유저프로필인 경우에만 게임 목록 출력 -->
+          {% if mode == 'user_profile' %}
             <div class="card-body">
               <h5 class="card-title">게임 목록<span
                   ><i
@@ -254,12 +256,16 @@
                     add_circle
                   </i></span
                 ></h5>
-              <a href="#" class="card-link">게임아이콘1</a>
-              <a href="#" class="card-link">게임아이콘2</a>
+                {% for game_info in game_list %}
+              <a href="{% url 'game' game_name=game_info.game_name %}" class="card-link">
+                  {{ game_info.game_name }}</a>
+                {% endfor %}
               <!--
                 위쪽에 Game 탭을 삭제하고 여기로 대체하는게 어떨까 하는 의견
               -->
             </div>
+          {% endif %}
+
           </div>
           <!-- 랭킹 표-->
                     <div class="card gedf-card">

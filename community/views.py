@@ -28,11 +28,16 @@ def timeline(request, user_id):
     following = len(Follow.objects.filter(following=user))
     follower = len(Follow.objects.filter(follower=user))
 
+    game_list = Gamedata.objects.filter(admin_name=request.user)
+
     context = {
         'data_list': data,
         'page_user': user,
         'following': following,
-        'follower': follower
+        'follower': follower,
+        'title': user_id + '\'s Timeline',
+        'game_list': game_list,
+        'mode': 'user_profile'
     }
     return render(request, 'timeline.html', context)
 
@@ -282,6 +287,8 @@ def search(request):
 
 def game_profile(request, game_name):
     params = dict()
+    params['title'] = 'Game Profile'
+    params['mode'] = 'game_profile'
 
     try:
         game_data = Gamedata.objects.get(game_name=game_name)
