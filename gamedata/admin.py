@@ -3,7 +3,7 @@ from .models import Gamedata, Ladder
 
 
 class GamedataAdmin(admin.ModelAdmin):
-    fields = ('game_name', 'score_type', 'api_key', 'admin_name')
+    fields = ('game_name', 'api_key', 'admin_name', 'image')
 
 
 class LadderAdmin(admin.ModelAdmin):

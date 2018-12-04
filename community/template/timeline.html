@@ -279,8 +279,9 @@
           </div>
           <div class="modal-body">
             <div class="form-wrapper">
-              <form method="POST">
-                <div class="form-group">
+              <form name="game_reg" method="POST" action="{% url 'reg_game_data' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                  <div class="form-group">
                   <img
                     src="https://react.semantic-ui.com/images/wireframe/image.png"
                     alt="..."
@@ -289,6 +290,7 @@
                     height="128"
                     class="btn rounded"
                   ><input
+                  name="img"
                   type="file"
                   class="input-img"
                   required
@@ -297,13 +299,14 @@
                     <Label>GAME NAME</Label>
                     <input
                       type="text"
+                      name="game_name"
                       class="form-control"
                       placeholder="GAME NAME"
                       required
                   />
                 </div>
                 </div>
-                <button type="submit" class="btn signup">ADD</button>
+                <button type="submit" class="btn signup" onclick="document.game_reg.submit()">ADD</button>
               </form>
             </div>
             <div class="modal-footer">

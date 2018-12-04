@@ -18,24 +18,25 @@ def register_game_data(request):
         return HttpResponse('Not authorized', status=400)
 
     generator = KeyGenerator()
-    # income = json.dump(request.body)
 
     new_gamedata = Gamedata()
-    # new_gamedata.game_name = income['game_name']
-    new_gamedata.game_name = request.GET['game_name']
+    new_gamedata.game_name = request.POST['game_name']
     new_gamedata.api_key = generator.key_gen()
+    new_gamedata.image = request.FILES['img']
+    new_gamedata.admin_name = request.user
+    new_gamedata.save()
 
-    try:
-        # user_obj = User.objects.find(income['id'])
-        user_obj = User.objects.find(request.GET['id'])
-    except User.DoesNotExist:
-        # return HttpResponse('Incorrect ID', status=400)
-        return JsonResponse({'code': 400, 'msg':'Incorrect ID'}, status=400)
-
-    new_gamedata.admin_name = user_obj
+    # try:
+    #     user_obj = User.objects.find(request.POST['id'])
+    # except User.DoesNotExist:
+    #     # return HttpResponse('Incorrect ID', status=400)
+    #     return JsonResponse({'code': 400, 'msg':'Incorrect ID'}, status=400)
+    #
+    # new_gamedata.admin_name = user_obj
 
     # return HttpResponse('Successfully registered')
-    return JsonResponse({'code': 200, 'msg': 'Successfully register'})
+    # return JsonResponse({'code': 200, 'msg': 'Successfully register'})
+    return redirect('login')
 
 
 # For development
