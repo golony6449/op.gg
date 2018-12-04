@@ -54,8 +54,8 @@
   <body>
     <div class="header">
       <div class="buttons">
-        <button type="button" class="nav">Home</button>
-        <button type="button" class="nav">logout</button>
+        <button type="button" class="nav" onclick="window.location.href='{% url 'timeline' user_id=user.get_username %}'">Home</button>
+        <button type="button" class="nav" onclick="window.location.href='{% url 'logout' %}'">logout</button>
       </div>
       <div class="title"><div class="page-name">CS.GG</div></div>
     </div>

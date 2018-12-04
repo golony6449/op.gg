@@ -20,6 +20,7 @@ from . import views
 
 # app_name = 'community'
 urlpatterns = [
+    path('', Login.as_view(), name='login'),
     path('<int:post_id>/write_comment', views.write_comment, name='write_comment'),
     path('<int:post_id>/delete_post', views.delete_post, name='delete_post'),
     # path('/send_game_data', send_game_data, 'send_game_data'),
@@ -28,7 +29,7 @@ urlpatterns = [
     path('rest/getUserList', GetUserList.as_view(), name='getUserList'),
     path('rest/writePost', WritePost.as_view(), name='writePost'),
     path('rest/auth/logout', Logout.as_view(), name='authLogout'),
-    path('login', Login.as_view(), name='login'),
+    # path('login', Login.as_view(), name='login'),
     path('logout', Logout.as_view(), name='logout'),
     path('signUp', SignUp.as_view(), name='signUp'),
     path('search', search, name='search'),
