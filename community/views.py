@@ -8,7 +8,8 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import UserInfo, Post, Comment, Follow
+from .models import UserInfo, Post, Comment, Follow, GamePost
+from gamedata.models import Gamedata, Ladder
 
 
 # 유저 개인 타임라인
@@ -277,3 +278,28 @@ class Logout(View):
 def search(request):
     # TODO: 검색기능 구현
     print(request.GET['keyword'])
+
+
+def game_profile(request, game_name):
+    params = dict()
+
+    try:
+        game_data = Gamedata.objects.get(game_name=game_name)
+        params['game_data'] = game_data
+    except Gamedata.DoesNotExist:
+        return HttpResponse('해당하는 게임이름이 없습니다.')
+
+    post_list = GamePost.objects.filter(game_data=game_data)[:10]
+    params['post_list'] = post_list
+
+    # 순위 상위 10개 추출
+    ladder_list = Ladder.objects.all().order_by('-score')[:10]
+    params['ladder_list'] = ladder_list
+
+    # 동일 유저 여부 확인
+    if request.user == game_data.admin_name:
+        params['admin_mode'] = True
+    else:
+        params['admin_mode'] = False
+
+    return render(request, 'timeline.html', params)

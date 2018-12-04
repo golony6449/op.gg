@@ -62,8 +62,8 @@
     <div class="profile-container">
       <div class="profile-top">
         <img
-          {% if page_user.profile %}
-          src={{ page_user.profile.url }}
+          {% if game_data.image %}
+          src={{ game_data.image.url }}
           {% else %}
           src="https://react.semantic-ui.com/images/wireframe/image.png"
           {% endif %}
@@ -108,7 +108,7 @@
         <div class="col-md-3">
           <div class="card">
             <div class="card-body">
-              <div class="h5">@{{ page_user.id }}</div>
+              <div class="h5">{{ game_data.game_name }}</div>
               <div class="h7 text-muted">{{ page_user.nickname }}</div>
               <div class="h7">{{ page_user.introduce }}</div>
             </div>
@@ -121,6 +121,14 @@
                 <div class="h6 text-muted">Following</div>
                 <div class="h5">{{ following }} </div>
               </li>
+                {% if admin_mode == True %}
+              <li class="list-group-item">
+                <div class="h6 text-muted">게임정보</div>
+                  <div class="h6 text-muted">등록번호: {{ game_data.index }} </div>
+                  <div class="h6 text-muted">api_key: {{ game_data.api_key }} </div>
+                  <div class="h6 text-muted">관리자 명: {{ game_data.admin_name }} </div>
+              </li>
+                {% endif %}
             </ul>
           </div>
         </div>
@@ -253,6 +261,31 @@
               -->
             </div>
           </div>
+          <!-- 랭킹 표-->
+                    <div class="card gedf-card">
+                    <div class="card-body" aria-labelledby="gedf-drop1">
+                      <table class="rank-table">
+                        <thead>
+                          <tr>
+                            <th>순위</th>
+                            <th>닉네임</th>
+                            <th>점수</th>
+                          </tr>
+                        </thead>
+                          <tbody>
+                          {% for ladder_info in ladder_list %}
+                            <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ ladder_info.player_id.username }}</td>
+                            <td>{{ ladder_info.score }}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+              </div>
+            </div>
         </div>
       </div>
     </div>

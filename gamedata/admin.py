@@ -7,7 +7,7 @@ class GamedataAdmin(admin.ModelAdmin):
 
 
 class LadderAdmin(admin.ModelAdmin):
-    fields = ('game_index', 'score')
+    fields = ('game_index', 'score', 'player_id')
 
 
 admin.site.register(Gamedata, GamedataAdmin)

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from gamedata.models import Gamedata
 
 
 # 임시 사용자 정보 테이블
@@ -34,6 +35,13 @@ class Post(models.Model):
     poster = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
     date = models.DateTimeField('date published', auto_now_add=True)
     game_data = models.OneToOneField('gamedata.Ladder', on_delete=models.CASCADE, null=True)
+
+
+class GamePost(models.Model):
+    content = models.CharField(max_length=120, null=False)
+    poster = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
+    date = models.DateTimeField('date published', auto_now_add=True)
+    game_data = models.ForeignKey(Gamedata, on_delete=models.CASCADE)
 
 
 class Like(models.Model):
