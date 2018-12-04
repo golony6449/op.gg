@@ -6,7 +6,6 @@ from django.conf import settings
 class Gamedata(models.Model):
     index = models.AutoField(primary_key=True)
     game_name = models.CharField(max_length=50)
-    score_type = models.CharField(max_length=10)
     api_key = models.CharField(max_length=50)
     admin_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField()

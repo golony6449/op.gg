@@ -22,9 +22,7 @@ def register_game_data(request):
 
     new_gamedata = Gamedata()
     # new_gamedata.game_name = income['game_name']
-    # new_gamedata.score_type = income['score_type']
     new_gamedata.game_name = request.GET['game_name']
-    new_gamedata.score_type = request.GET['score_type']
     new_gamedata.api_key = generator.key_gen()
 
     try:
@@ -50,7 +48,6 @@ class RegisterTemp(View):
 
         new_gamedata = Gamedata()
         new_gamedata.game_name = request.POST['game_name']
-        new_gamedata.score_type = request.POST['score_type']
         new_gamedata.api_key = generator.key_gen()
         new_gamedata.admin_name = request.user
 
