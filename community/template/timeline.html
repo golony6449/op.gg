@@ -31,6 +31,16 @@
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"
     ></script>
+
+    <script>
+        var _page_id = "{{ page_user.id.username }}";
+        var _nickname = "{{ page_user.nickname }}";
+        {% if page_user.profile %}
+        var _user_img = "{{ page_user.profile.url }}";
+        {% else %}
+        var _user_img = "https://react.semantic-ui.com/images/wireframe/image.png"
+        {% endif %}
+    </script>
     <script src="../static/js/Home.js"></script>
 
     <link
@@ -69,16 +79,18 @@
                     class="profile-image"
         />
     </div>
+
     <nav class="navbar profile-nav">
         <form class="form-inline" method="POST">
             <button id="follow" type="button" user="{{ page_user.id.username }}" class="btn {% if followed %}Followed{% endif %}" onclick="handleFollowButton()">{% if followed %}Following{% else %}Follow{% endif %}</button>
         </form>
-        <form class="form-inline" method="POST">
+        <form class="form-inline" action="{% url 'search' %}" method="get">
           <div class="input-group">
             <input
               type="text"
               class="form-control search-user"
-              id="searchUser"
+              id="search_keyword"
+              name="keyword"
               aria-label="Recipient's username"
               aria-describedby="button-addon2"
             />
@@ -102,7 +114,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="h5">@{{ page_user.id.username }}</div>
-                    <div class="h7 text-muted">{{ page_user.nickname }}</div>
+                    <div id="text-nickname" class="h7 text-muted">{{ page_user.nickname }}</div>
                     <div class="h7">{{ page_user.introduce }}</div>
                 </div>
                 <ul class="list-group list-group-flush">
@@ -175,56 +187,7 @@
                 <p id="text-output"></p>
             -->
             <div class="gedf-card-row">
-                {% for data in data_list %}
-                    <!-- Post -->
-                    <div class="card gedf-card post-card" id="posts-partition">
-                        <div class="card-header">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div
-                                        class="d-flex justify-content-between align-items-center"
-                                >
-                                    <div class="mr-2">
-                                        <img
-                                                class="rounded-circle"
-                                                width="45"
-                                                {% if page_user.profile %}
-                                                src={{ page_user.profile }}
-                                                {% else %}
-                                                src="https://picsum.photos/50/50"
-                                                {% endif %}
-                                                alt=""
-                                        />
-                                    </div>
-                                    <div class="ml-2">
-                                        <div class="h5 m-0">@{{ page_user.id }}</div>
-                                        <div class="h7 text-muted">
-                                            {{ page_user }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="text-muted h7 mb-2">
-                                <i class="fa fa-clock-o"></i> {{ data.post.date }}
-                            </div>
-
-                            <p class="card-text">{{ data.post.content }}</p>
-                        </div>
-                        <div class="card-footer">
-                            <a href="#" class="card-link"
-                            ><i class="fa fa-gittip"></i> Like</a
-                            >
-                        </div>
-                    </div>
-                {% endfor %}
-                <!-- Post -->
-            </div>
-            <div>
-                <button type="button" class="btn btn-more" id="Viewmore">
-                    더 보기
-                </button>
+                <!--게시글 부분-->
             </div>
         </div>
         <div class="col-md-3">

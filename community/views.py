@@ -220,7 +220,7 @@ class GetPost(View):
             for comment in _comments:
                 comments.append({'content': comment.content, 'commenter': comment.commenter.make_dict(), 'date': comment.date})
             data.append({
-                'post': {'content': post.content, 'id': post.id, 'data': post.date},
+                'post': {'content': post.content, 'id': post.id, 'date': post.date},
                 'comments': comments
             })
 
@@ -353,8 +353,26 @@ class Logout(View):
 
 
 def search(request):
+    params = dict()
+    params['keyword'] = request.GET['keyword']
+
     # TODO: 검색기능 구현
-    print(request.GET['keyword'])
+
+    # 게임 목록
+    game_list = Gamedata.objects.filter(game_name__contains=request.GET['keyword'])
+    params['game_list'] = game_list
+
+    # 유저 검색
+    user_list = User.objects.filter(username__contains=request.GET['keyword'])
+    params['user_list'] = user_list
+
+    user_info_list = list()
+
+    for user in user_list:
+        user_info_list.append(UserInfo.objects.get(id=user))
+    params['user_info_list'] = user_info_list
+
+    return render(request, 'Search.html', params)
 
 
 def game_profile(request, game_name):
@@ -362,17 +380,20 @@ def game_profile(request, game_name):
     params['title'] = 'Game Profile'
     params['mode'] = 'game_profile'
 
+    # 요청 받은 페이지의 게임 정보 확인
     try:
         game_data = Gamedata.objects.get(game_name=game_name)
         params['game_data'] = game_data
+        params['page_user'] = game_data.admin_name
     except Gamedata.DoesNotExist:
         return HttpResponse('해당하는 게임이름이 없습니다.')
 
-    post_list = GamePost.objects.filter(game_data=game_data)[:10]
-    params['post_list'] = post_list
+    # 게임에 대한 공지사항
+    notice_list = GamePost.objects.filter(game_data=game_data).order_by('-date')
+    params['notice_list'] = notice_list
 
     # 순위 상위 10개 추출
-    ladder_list = Ladder.objects.all().order_by('-score')[:10]
+    ladder_list = Ladder.objects.filter(game_index=game_data).order_by('-score')[:10]
     params['ladder_list'] = ladder_list
 
     params['game_list'] = Gamedata.objects.filter(admin_name=request.user)
@@ -383,4 +404,20 @@ def game_profile(request, game_name):
     else:
         params['admin_mode'] = False
 
-    return render(request, 'timeline.html', params)
+    return render(request, 'timeline_game.html', params)
+
+
+class WriteGamePost(View):
+    def get(self, request):
+        return redirect('login')
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            try:
+                game_data = Gamedata.objects.get(game_name=request.POST['game_name'])
+            except Gamedata.DoesNotExist:
+                return HttpResponse('올바르지 않은 접근 입니다. (잘못된 게임 명)')
+
+            GamePost.objects.create(content=request.POST['content'], game_data=game_data, date=timezone.now())
+            return redirect('game', game_name=request.POST['game_name'])
+        return redirect('login')
