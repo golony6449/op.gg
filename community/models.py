@@ -11,6 +11,7 @@ class UserInfo(models.Model):
     nickname = models.CharField(max_length=10, null=True)
     introduce = models.TextField(null=True)
     profile = models.ImageField(blank=True, upload_to="profile")
+    mode = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nickname
