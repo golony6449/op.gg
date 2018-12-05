@@ -290,17 +290,20 @@ def game_profile(request, game_name):
     params['title'] = 'Game Profile'
     params['mode'] = 'game_profile'
 
+    # 요청 받은 페이지의 게임 정보 확인
     try:
         game_data = Gamedata.objects.get(game_name=game_name)
         params['game_data'] = game_data
+        params['page_user'] = game_data.admin_name
     except Gamedata.DoesNotExist:
         return HttpResponse('해당하는 게임이름이 없습니다.')
 
-    post_list = GamePost.objects.filter(game_data=game_data)[:10]
-    params['post_list'] = post_list
+    # 게임에 대한 공지사항
+    notice_list = GamePost.objects.filter(game_data=game_data).order_by('-date')
+    params['notice_list'] = notice_list
 
     # 순위 상위 10개 추출
-    ladder_list = Ladder.objects.all().order_by('-score')[:10]
+    ladder_list = Ladder.objects.filter(game_index=game_data).order_by('-score')[:10]
     params['ladder_list'] = ladder_list
 
     # 동일 유저 여부 확인
@@ -309,4 +312,19 @@ def game_profile(request, game_name):
     else:
         params['admin_mode'] = False
 
-    return render(request, 'timeline.html', params)
+    return render(request, 'timeline_game.html', params)
+
+
+class WriteGamePost(View):
+    def get(self, request):
+        return redirect('login')
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            try:
+                user = UserInfo.objects.get(id=request.user)
+            except UserInfo.DoesNotExist:
+                return redirect('timeline', request.user.username)
+            Post.objects.create(content=request.POST['content'], poster=user, date=timezone.now())
+            return redirect('timeline', request.user.username)
+        return redirect('login')

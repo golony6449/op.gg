@@ -125,7 +125,7 @@
               <li class="list-group-item">
                 <div class="h6 text-muted">게임정보</div>
                   <div class="h6 text-muted">등록번호: {{ game_data.index }} </div>
-                  <div class="h6 text-muted">api_key: {{ game_data.api_key }} </div>
+                  <div class="h6 text-muted">API Key: {{ game_data.api_key }} </div>
                   <div class="h6 text-muted">관리자 명: {{ game_data.admin_name }} </div>
               </li>
                 {% endif %}
@@ -190,7 +190,7 @@
               <p id="text-output"></p>
           -->
           <div class="gedf-card-row">
-              {% for data in data_list %}
+              {% for data in notice_list %}
             <!-- Post -->
             <div class="card gedf-card post-card" id="posts-partition">
               <div class="card-header">
@@ -202,8 +202,8 @@
                       <img
                         class="rounded-circle"
                         width="45"
-                        {% if page_user.profile %}
-                         src={{ page_user.profile }}
+                        {% if game_data.image %}
+                         src={{ game_data.image.url }}
                         {% else %}
                         src="https://picsum.photos/50/50"
                         {% endif %}
@@ -211,9 +211,9 @@
                       />
                     </div>
                     <div class="ml-2">
-                      <div class="h5 m-0">@{{ page_user.id }}</div>
+                      <div class="h5 m-0">@{{ game_data.game_name }}</div>
                       <div class="h7 text-muted">
-                        {{ page_user }}
+                        {{ game_data.admin_name }}
                       </div>
                     </div>
                   </div>
@@ -222,10 +222,10 @@
 
               <div class="card-body">
                 <div class="text-muted h7 mb-2">
-                  <i class="fa fa-clock-o"></i> {{ data.post.date }}
+                  <i class="fa fa-clock-o"></i> {{ data.date }}
                 </div>
 
-                <p class="card-text">{{ data.post.content }}</p>
+                <p class="card-text">{{ data.content }}</p>
               </div>
               <div class="card-footer">
                 <a href="#" class="card-link"
