@@ -50,6 +50,8 @@ def timeline(request, user_id):
     else:
         admin_mode = False
 
+    ladder_info_list = Ladder.objects.filter(player_id=request.user).order_by('-index')[:10]
+
     context = {
         # 'data_list': data,
         'page_user': user,
@@ -59,7 +61,8 @@ def timeline(request, user_id):
         'title': user_id + '\'s Timeline',
         'game_list': game_list,
         'admin_mode': admin_mode,
-        'mode': 'user_profile'
+        'mode': 'user_profile',
+        'ladder_list': ladder_info_list
     }
     return render(request, 'timeline.html', context)
 
