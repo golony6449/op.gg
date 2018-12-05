@@ -81,6 +81,7 @@ def sync(request):
     except User.DoesNotExist:
         return JsonResponse({'code': 401, 'message': 'Wrong User name'}, status=401)
     new_ladder_data.player_id = user_obj
+    new_ladder_data.save()
 
     # 글 목록 추가
     new_post = Post()
@@ -91,7 +92,6 @@ def sync(request):
     new_post.game_data = new_ladder_data
 
     # Commit
-    new_ladder_data.save()
     new_post.save()
 
     return JsonResponse({'code': 200, 'message': 'Successfully synced'})

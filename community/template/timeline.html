@@ -219,7 +219,7 @@
                     <table class="rank-table">
                         <thead>
                         <tr>
-                            <th>순위</th>
+                            <th>게임 이름</th>
                             <th>닉네임</th>
                             <th>점수</th>
                         </tr>
@@ -227,7 +227,7 @@
                         <tbody>
                         {% for ladder_info in ladder_list %}
                             <tr>
-                                <td>{{ forloop.counter }}</td>
+                                <td>{{ ladder_info.game_index.game_name }}</td>
                                 <td>{{ ladder_info.player_id.username }}</td>
                                 <td>{{ ladder_info.score }}</td>
                             </tr>
