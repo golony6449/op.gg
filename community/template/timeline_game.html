@@ -145,7 +145,7 @@
                     role="tabpanel"
                     aria-labelledby="posts-tab"
                   >
-                    <form name="write_post" action="{% url 'writePost' %}" method="post">
+                    <form name="write_post" action="{% url 'writeGamePost' %}" method="post">
                     {% csrf_token %}
                       <div class="form-group">
                         <label class="sr-only" for="message">post</label>
@@ -154,10 +154,10 @@
                           class="form-control"
                           id="input-post"
                           rows="3"
-                          {% if user.is_authenticated and page_user.id == user %}
-                          placeholder="당신의 게임 실력을 공유해보세요!"
+                          {% if user.is_authenticated and page_user == user %}
+                          placeholder="공지사항 입력"
                           {% else %}
-                          placeholder="본인의 타임라인에만 글 작성이 가능합니다."
+                          placeholder="관리자만 타임라인에만 글 작성이 가능합니다."
                           readonly="readonly"
                           {% endif %}
                         ></textarea>
