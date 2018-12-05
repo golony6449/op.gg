@@ -29,6 +29,7 @@ urlpatterns = [
     path('rest/getUserList', GetUserList.as_view(), name='getUserList'),
     path('rest/writePost', WritePost.as_view(), name='writePost'),
     path('rest/auth/logout', Logout.as_view(), name='authLogout'),
+    path('rest/writeGamePost', WriteGamePost.as_view(), name='writeGamePost'),
     # path('login', Login.as_view(), name='login'),
     path('logout', Logout.as_view(), name='logout'),
     path('signUp', SignUp.as_view(), name='signUp'),

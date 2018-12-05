@@ -322,9 +322,10 @@ class WriteGamePost(View):
     def post(self, request):
         if request.user.is_authenticated:
             try:
-                user = UserInfo.objects.get(id=request.user)
-            except UserInfo.DoesNotExist:
-                return redirect('timeline', request.user.username)
-            Post.objects.create(content=request.POST['content'], poster=user, date=timezone.now())
-            return redirect('timeline', request.user.username)
+                game_data = Gamedata.objects.get(game_name=request.POST['game_name'])
+            except Gamedata.DoesNotExist:
+                return HttpResponse('올바르지 않은 접근 입니다. (잘못된 게임 명)')
+
+            GamePost.objects.create(content=request.POST['content'], game_data=game_data, date=timezone.now())
+            return redirect('game', game_name=request.POST['game_name'])
         return redirect('login')
