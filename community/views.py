@@ -6,7 +6,6 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 
 from .models import UserInfo, Post, Comment, Follow, GamePost
 from gamedata.models import Gamedata, Ladder
@@ -25,21 +24,82 @@ def timeline(request, user_id):
     for post in posts:
         data.append({'post': post, 'comments': Comment.objects.filter(post=post).order_by('date')})
 
-    following = len(Follow.objects.filter(following=user))
-    follower = len(Follow.objects.filter(follower=user))
+    following = len(Follow.objects.filter(follower=user))
+    follower = Follow.objects.filter(following=user)
 
-    game_list = Gamedata.objects.filter(admin_name=request.user)
+    game_list = []
+
+    if request.user.is_authenticated:
+        try:
+            login_user = UserInfo.objects.get(id=request.user)
+            game_list = Gamedata.objects.filter(admin_name=request.user)
+            if len(follower.filter(follower=login_user)) == 1:
+                followed = True
+            else:
+                followed = False
+        except User.DoesNotExist:
+            followed = False
+    else:
+        followed = False
+
+    follower = len(follower)
+
+    # 동일 유저 여부 확인
+    if request.user == user_obj:
+        admin_mode = True
+    else:
+        admin_mode = False
 
     context = {
         'data_list': data,
         'page_user': user,
         'following': following,
         'follower': follower,
+        'followed': followed,
         'title': user_id + '\'s Timeline',
         'game_list': game_list,
+        'admin_mode': admin_mode,
         'mode': 'user_profile'
     }
     return render(request, 'timeline.html', context)
+
+
+def toggle_follow(request):
+    if request.user:
+        try:
+            user = User.objects.get(username=request.GET['id'])
+            page_user = UserInfo.objects.get(id=user)
+            user = User.objects.get(username=request.user.username)
+            login_user = UserInfo.objects.get(id=user)
+        except User.DoesNotExist:
+            return JsonResponse({
+                'code': 0
+            }, json_dumps_params={'ensure_ascii': False})
+        except UserInfo.DoesNotExist:
+            return JsonResponse({
+                'code': 0
+            }, json_dumps_params={'ensure_ascii': False})
+
+        try:
+            follow = Follow.objects.get(following=page_user, follower=login_user)
+            Follow.delete(follow)
+            following = len(Follow.objects.filter(follower=page_user))
+            follower = len(Follow.objects.filter(following=page_user))
+            return JsonResponse({
+                'code': 0,
+                'following': following,
+                'follower': follower
+            }, json_dumps_params={'ensure_ascii': False})
+        except Follow.DoesNotExist:
+            follow = Follow.objects.create(following=page_user, follower=login_user)
+            follow.save()
+            following = len(Follow.objects.filter(follower=page_user))
+            follower = len(Follow.objects.filter(following=page_user))
+            return JsonResponse({
+                'code': 1,
+                'following': following,
+                'follower': follower
+            }, json_dumps_params={'ensure_ascii': False})
 
 
 def community(request):
@@ -65,6 +125,18 @@ def write_comment(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     Comment.objects.create(content=request.POST['content'], post=post, commenter=user, date=timezone.now())
     return HttpResponseRedirect(reverse('timeline', args=(post.poster.id,)))
+
+
+def check_id(request):
+    try:
+        User.objects.get(username=request.GET['id'])
+        return JsonResponse({
+            'code': 0
+        }, json_dumps_params={'ensure_ascii': False})
+    except User.DoesNotExist:
+        return JsonResponse({
+                'code': 1
+            }, json_dumps_params={'ensure_ascii': False})
 
 
 def read(request):
@@ -251,7 +323,7 @@ class SignUp(View):
     def post(self, request):
         user = User.objects.create_user(request.POST['id'], request.POST['email'], request.POST['pw'])
         user.save()
-        UserInfo.objects.create(id=user, nickname=request.POST['nickname'])
+        UserInfo.objects.create(id=user, nickname=request.POST['nickname'], profile=request.FILES['img'], introduce=request.POST['introduce'])
 
         return render(request, 'Auth/Auth.html')
 
@@ -302,6 +374,8 @@ def game_profile(request, game_name):
     # 순위 상위 10개 추출
     ladder_list = Ladder.objects.all().order_by('-score')[:10]
     params['ladder_list'] = ladder_list
+
+    params['game_list'] = Gamedata.objects.filter(admin_name=request.user)
 
     # 동일 유저 여부 확인
     if request.user == game_data.admin_name:

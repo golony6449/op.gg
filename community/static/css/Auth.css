@@ -125,6 +125,33 @@ hr {
 .modal-body .form-group {
   padding-right: 0;
 }
+
+#input-profile {
+  resize: none;
+}
+.form-group #input-img-div {
+  padding-left: 6.9rem;
+  padding-right: 6.9rem;
+}
+.form-group #profile-image {
+  margin-top: 0;
+  width: 10rem;
+  height: 10rem;
+}
+.dev-check-div {
+  position: absolute;
+  left: 7rem;
+  top: -2.7rem;
+}
+.dev-check {
+  vertical-align: top;
+  width: 24px;
+  height: 24px;
+}
+.input-img {
+  visibility: hidden;
+  width: 1px;
+}
 /*
 .username-form {
   display: flex;

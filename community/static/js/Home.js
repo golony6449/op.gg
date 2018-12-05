@@ -27,13 +27,15 @@ $(function() {
 
 //프로필 업로드
 $(function() {
+  //이미지 클릭시
   $("#profile-image").click(function() {
+    //<input type="file" 파일 입력
     $(".input-img").click();
-    $(".input-img").on("change", handleIgmFileSelect);
+    $(".input-img").on("change", handleImgFileSelect); //변화 발생시 handleImgaFileSelect 함수 실행
   });
 });
 
-function handleIgmFileSelect(event) {
+function handleImgFileSelect(event) {
   var files = event.target.files;
   var filesArr = Array.prototype.slice.call(files);
 
@@ -51,3 +53,26 @@ function handleIgmFileSelect(event) {
     reader.readAsDataURL(f);
   });
 }
+
+function handleFollowButton(event) {
+  let id = $('#follow').attr('user');
+
+  $.ajax({
+        url: "auth/toggleFollow?id="+id,
+        type: 'get',
+        success: function (data) {
+            let obj = data;
+            if (obj.code === 0) {
+              $("#follow").removeClass('Followed');
+              $("#follow").html("Follow");
+            } else {
+              $("#follow").addClass('Followed');
+              $("#follow").html("Following");
+            }
+            $("#follower").html(obj.follower);
+            $("#following").html(obj.following);
+        }
+    })
+}
+
+
