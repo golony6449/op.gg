@@ -19,10 +19,10 @@ def timeline(request, user_id):
         return HttpResponse('존재하지 않는 사용자 입니다.', status=400)
 
     user = UserInfo.objects.get(id=user_obj)
-    posts = Post.objects.filter(poster=user).order_by('-date')
-    data = []
-    for post in posts:
-        data.append({'post': post, 'comments': Comment.objects.filter(post=post).order_by('date')})
+    # posts = Post.objects.filter(poster=user).order_by('-date')
+    # data = []
+    # for post in posts:
+    #     data.append({'post': post, 'comments': Comment.objects.filter(post=post).order_by('date')})
 
     following = len(Follow.objects.filter(follower=user))
     follower = Follow.objects.filter(following=user)
@@ -51,7 +51,7 @@ def timeline(request, user_id):
         admin_mode = False
 
     context = {
-        'data_list': data,
+        # 'data_list': data,
         'page_user': user,
         'following': following,
         'follower': follower,
@@ -135,8 +135,8 @@ def check_id(request):
         }, json_dumps_params={'ensure_ascii': False})
     except User.DoesNotExist:
         return JsonResponse({
-                'code': 1
-            }, json_dumps_params={'ensure_ascii': False})
+            'code': 1
+        }, json_dumps_params={'ensure_ascii': False})
 
 
 def read(request):
@@ -195,9 +195,9 @@ class GetPost(View):
 
         posts = Post.objects.filter(poster=user).order_by('-date')
         total_num = len(posts)
-        total_page = total_num//item_num
+        total_page = total_num // item_num
 
-        if total_num%item_num != 0:
+        if total_num % item_num != 0:
             total_page += 1
 
         if total_page < page:
@@ -208,20 +208,23 @@ class GetPost(View):
                 'now_page': page,
             }, json_dumps_params={'ensure_ascii': False})
         elif total_page == page:
-            posts = posts[(page-1)*item_num:]
+            posts = posts[(page - 1) * item_num:]
         else:
-            start_num = (page-1)*item_num
-            posts = posts[start_num:start_num+item_num]
+            start_num = (page - 1) * item_num
+            posts = posts[start_num:start_num + item_num]
 
         data = []
         for post in posts:
-            _comments = Comment.objects.filter(post=post).order_by('date')[:5]
-            comments = []
-            for comment in _comments:
-                comments.append({'content': comment.content, 'commenter': comment.commenter.make_dict(), 'date': comment.date})
+            if post.game_data:
+                is_game_data = True
+                game_data = {'name': post.game_data.game_index.game_name, 'img': post.game_data.game_index.image.url,
+                             'score': post.game_data.score}
+            else:
+                is_game_data = False
+                game_data = False
             data.append({
-                'post': {'content': post.content, 'id': post.id, 'date': post.date},
-                'comments': comments
+                'post': {'content': post.content, 'id': post.id, 'date': post.date, 'is_game': is_game_data},
+                'game_data': game_data
             })
 
         context = {
@@ -323,7 +326,8 @@ class SignUp(View):
     def post(self, request):
         user = User.objects.create_user(request.POST['id'], request.POST['email'], request.POST['pw'])
         user.save()
-        UserInfo.objects.create(id=user, nickname=request.POST['nickname'], profile=request.FILES['img'], introduce=request.POST['introduce'])
+        UserInfo.objects.create(id=user, nickname=request.POST['nickname'], profile=request.FILES['img'],
+                                mode=request.POST['is_dev'], introduce=request.POST['introduce'])
 
         return render(request, 'Auth/Auth.html')
 
@@ -372,10 +376,6 @@ def search(request):
         user_info_list.append(UserInfo.objects.get(id=user))
     params['user_info_list'] = user_info_list
 
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/master
     return render(request, 'Search.html', params)
 
 

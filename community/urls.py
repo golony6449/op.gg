@@ -30,11 +30,8 @@ urlpatterns = [
     path('rest/writePost', WritePost.as_view(), name='writePost'),
     path('rest/auth/logout', Logout.as_view(), name='authLogout'),
     path('rest/writeGamePost', WriteGamePost.as_view(), name='writeGamePost'),
-<<<<<<< HEAD
     path('auth/checkId', views.check_id, name='check_id'),
     path('auth/toggleFollow', views.toggle_follow, name='toggle_follow'),
-=======
->>>>>>> upstream/master
     # path('login', Login.as_view(), name='login'),
     path('logout', Logout.as_view(), name='logout'),
     path('signUp', SignUp.as_view(), name='signUp'),
