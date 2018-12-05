@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- CSS -->
+    <link rel="stylesheet" href="../static/css/Default.css" />
+    <link rel="stylesheet" href="../static/css/Home.css" />
+    <link rel="stylesheet" href="../static/css/AddingModal.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <!-- JavaScript -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../static/js/Home.js"></script>
+
+    <link
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+      crossorigin="anonymous"
+    />
+      <script>
+          function searchRequest(){
+              keyword = $('#search_keyword').val();
+              window.location.href = '/search?keyword='+keyword;
+          }
+      </script>
+  </head>
+
+  <body>
+    <div class="header">
+      <div class="buttons">
+        <button type="button" class="nav" onclick="window.location.href='{% url 'timeline' user_id=user.get_username %}'">Home</button>
+        <button type="button" class="nav" onclick="window.location.href='{% url 'logout' %}'">logout</button>
+      </div>
+      <div class="title"><div class="page-name">CS.GG</div></div>
+    </div>
+    <div class="profile-container">
+      <div class="profile-top">
+        <img
+          {% if game_data.image %}
+          src={{ game_data.image.url }}
+          {% else %}
+          src="https://react.semantic-ui.com/images/wireframe/image.png"
+          {% endif %}
+          alt="..."
+          height="256"
+          width="256"
+          class="profile-image"
+        />
+      </div>
+    </div>
+
+    <!-- 소셜 네트워크 레이아웃 -->
+
+    <nav class="navbar navbar-light bg-white">
+      <a href="#" class="navbar-brand"></a>
+      <form class="form-inline">
+        <div class="input-group">
+          <input
+            type="text"
+            id="search_keyword"
+            class="form-control"
+            aria-label="Recipient's username"
+            aria-describedby="button-addon2"
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-outline-primary"
+              type="button"
+              id="button-addon2"
+              onclick="window.location.href='search?keyword='+$('#search_keyword').val()"
+            >
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </nav>
+
+    <!---->
+    <div class="container-fluid gedf-wrapper">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="h5">{{ game_data.game_name }}</div>
+              <div class="h7 text-muted">{{ page_user.nickname }}</div>
+              <div class="h7">{{ page_user.introduce }}</div>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <div class="h6 text-muted">Followers</div>
+                <div class="h5">{{ follower }}</div>
+              </li>
+              <li class="list-group-item">
+                <div class="h6 text-muted">Following</div>
+                <div class="h5">{{ following }} </div>
+              </li>
+                {% if admin_mode == True %}
+              <li class="list-group-item">
+                <div class="h6 text-muted">게임정보</div>
+                  <div class="h6 text-muted">등록번호: {{ game_data.index }} </div>
+                  <div class="h6 text-muted">api_key: {{ game_data.api_key }} </div>
+                  <div class="h6 text-muted">관리자 명: {{ game_data.admin_name }} </div>
+              </li>
+                {% endif %}
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6 gedf-main">
+          <div class="gedf-card-input">
+            <!-- Post-input -->
+            <div class="card gedf-card card-input">
+              <div class="card-header"></div>
+              <div class="card-body">
+                <div class="tab-content" id="myTabContent">
+                  <div
+                    class="tab-pane fade show active"
+                    id="posts"
+                    role="tabpanel"
+                    aria-labelledby="posts-tab"
+                  >
+                    <form name="write_post" action="{% url 'writePost' %}" method="post">
+                    {% csrf_token %}
+                      <div class="form-group">
+                        <label class="sr-only" for="message">post</label>
+                        <textarea
+                          name="content"
+                          class="form-control"
+                          id="input-post"
+                          rows="3"
+                          {% if user.is_authenticated and page_user.id == user %}
+                          placeholder="당신의 게임 실력을 공유해보세요!"
+                          {% else %}
+                          placeholder="본인의 타임라인에만 글 작성이 가능합니다."
+                          readonly="readonly"
+                          {% endif %}
+                        ></textarea>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="btn-toolbar justify-content-between">
+                  <div class="btn-group">
+                    <button
+                      type="submit"
+                      class="btn btn-csgg"
+                      onclick="writePost()"
+                    >
+                      게시하기
+                    </button>
+                  </div>
+                </div>
+                <p id="text-output"></p>
+              </div>
+            </div>
+            <!-- Post-input -->
+          </div>
+          <!--
+            <form>
+                  <input type="text">
+                  <button type="submit">Submit</button>
+              </form>
+
+              <p id="text-output"></p>
+          -->
+          <div class="gedf-card-row">
+              {% for data in data_list %}
+            <!-- Post -->
+            <div class="card gedf-card post-card" id="posts-partition">
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <div class="mr-2">
+                      <img
+                        class="rounded-circle"
+                        width="45"
+                        {% if page_user.profile %}
+                         src={{ page_user.profile }}
+                        {% else %}
+                        src="https://picsum.photos/50/50"
+                        {% endif %}
+                        alt=""
+                      />
+                    </div>
+                    <div class="ml-2">
+                      <div class="h5 m-0">@{{ page_user.id }}</div>
+                      <div class="h7 text-muted">
+                        {{ page_user }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="text-muted h7 mb-2">
+                  <i class="fa fa-clock-o"></i> {{ data.post.date }}
+                </div>
+
+                <p class="card-text">{{ data.post.content }}</p>
+              </div>
+              <div class="card-footer">
+                <a href="#" class="card-link"
+                  ><i class="fa fa-gittip"></i> Like</a
+                >
+              </div>
+            </div>
+              {% endfor %}
+            <!-- Post -->
+          </div>
+          <div>
+            <button type="button" class="btn btn-more" id="Viewmore">
+              더 보기
+            </button>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card gedf-card">
+          <!-- 유저프로필인 경우에만 게임 목록 출력 -->
+          {% if mode == 'user_profile' %}
+            <div class="card-body">
+              <h5 class="card-title">게임 목록<span
+                  ><i
+                    class="material-icons"
+                    data-toggle="modal"
+                    data-target="#addGameModal"
+                  >
+                    add_circle
+                  </i></span
+                ></h5>
+                {% for game_info in game_list %}
+              <a href="{% url 'game' game_name=game_info.game_name %}" class="card-link">
+                  {{ game_info.game_name }}</a>
+                {% endfor %}
+              <!--
+                위쪽에 Game 탭을 삭제하고 여기로 대체하는게 어떨까 하는 의견
+              -->
+            </div>
+          {% endif %}
+
+          </div>
+          <!-- 랭킹 표-->
+                    <div class="card gedf-card">
+                    <div class="card-body" aria-labelledby="gedf-drop1">
+                      <table class="rank-table">
+                        <thead>
+                          <tr>
+                            <th>순위</th>
+                            <th>닉네임</th>
+                            <th>점수</th>
+                          </tr>
+                        </thead>
+                          <tbody>
+                          {% for ladder_info in ladder_list %}
+                            <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ ladder_info.player_id.username }}</td>
+                            <td>{{ ladder_info.score }}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  <div
+      class="modal fade "
+      id="addGameModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addGameModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addGameModalLabel">게임 추가</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-wrapper">
+              <form name="game_reg" method="POST" action="{% url 'reg_game_data' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                  <div class="form-group">
+                  <img
+                    src="https://react.semantic-ui.com/images/wireframe/image.png"
+                    alt="..."
+                    id="profile-image"
+                    width="128"
+                    height="128"
+                    class="btn rounded"
+                  ><input
+                  name="img"
+                  type="file"
+                  class="input-img"
+                  required
+              /></img>
+                  <div class="form-group-control">
+                    <Label>GAME NAME</Label>
+                    <input
+                      type="text"
+                      name="game_name"
+                      class="form-control"
+                      placeholder="GAME NAME"
+                      required
+                  />
+                </div>
+                </div>
+                <button type="submit" class="btn signup" onclick="document.game_reg.submit()">ADD</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+                style="font-weight: 500"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
