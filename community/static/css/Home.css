@@ -52,21 +52,50 @@
 }
 
 .profile-container {
-  height: 40vh;
-  background-color: #f1f3f5;
+  height: 25rem;
+  background-color: #ffffff;
 }
 
 .profile-container .profile-top {
-  height: 91%;
+  height: 85%;
   background-color: #38d9a9;
 }
 
 .profile-top .profile-image {
   position: absolute;
+  z-index: 10000000000;
   top: 12vh;
   left: 24vh;
   box-shadow: -4px -4px #fff, 4px -4px #fff, -4px 4px #fff, 4px 4px #fff;
   border-radius: 200%;
+}
+.profile-container .profile-nav {
+  background-color: #f1f2f3;
+}
+.profile-container .follow {
+  width: 8rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+
+  background-color: #ffffff00;
+  border: 1px solid #2bac85;
+  color: #2bac85;
+}
+
+.profile-container .follow:hover {
+  background-color: #38d9a9;
+  color: #ffffff;
+  border-color: #38d9a9;
+}
+
+.profile-container .btn:active {
+  background-color: #38d9a9;
+  color: #ffffff;
+  border-color: #38d9a9;
+}
+
+.container-fluid {
+  padding-top: 0.5rem;
 }
 
 #posts-partition {
@@ -78,6 +107,20 @@
   margin-top: 0.5rem;
 }
 
+#input-post {
+  resize: none;
+}
+.score-card {
+  height: 200px;
+  border: 1px solid #868e96;
+  padding: 1em 1em 1em 1em;
+}
+.score-card .score-card-img {
+  float: left;
+}
+.score-card .score-card-score {
+  float: left;
+}
 .btn-more {
   margin: 0.5rem 17.1rem 0 17.1rem;
 }
@@ -122,4 +165,30 @@
   text-decoration: none;
   cursor: pointer;
   color: #38d9a9;
+}
+
+.rank-table {
+  width: 100%;
+  border: 1px solid #bcbcbc;
+}
+
+.rank-table th {
+  text-align: center;
+  border: 1px solid #bcbcbc;
+}
+
+td {
+  border: 1px solid #bcbcbc;
+}
+
+.rank-table tbody tr:nth-child(2n) {
+  background-color: #fdfdfd;
+}
+
+.rank-table tbody tr:nth-child(2n + 1) {
+  background-color: #e3fae8;
+}
+
+.rank-table tbody td:nth-child(1) {
+  text-align: center;
 }

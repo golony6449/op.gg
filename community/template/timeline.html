@@ -79,11 +79,12 @@
 
     <nav class="navbar navbar-light bg-white">
       <a href="#" class="navbar-brand"></a>
-      <form class="form-inline">
+      <form class="form-inline" action="{% url 'search' %}" method="get">
         <div class="input-group">
           <input
             type="text"
             id="search_keyword"
+            name="keyword"
             class="form-control"
             aria-label="Recipient's username"
             aria-describedby="button-addon2"
@@ -91,9 +92,8 @@
           <div class="input-group-append">
             <button
               class="btn btn-outline-primary"
-              type="button"
+              type="submit"
               id="button-addon2"
-              onclick="window.location.href='search?keyword='+$('#search_keyword').val()"
             >
               <i class="fa fa-search"></i>
             </button>

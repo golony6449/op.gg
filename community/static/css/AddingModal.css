@@ -11,19 +11,23 @@
   width: inherit;
   padding: 0 2rem 0 2rem;
 }
+
 .input-img {
   visibility: hidden;
   width: 1px;
 }
+
 .modal-body .form-group-control {
   position: absolute;
   top: 4em;
   right: 6em;
   margin: 0%;
 }
+
 .form-group-control label {
   font-weight: 700;
 }
+
 .modal-body .form-group {
   padding-right: 0;
 }
