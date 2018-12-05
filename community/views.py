@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from .models import UserInfo, Post, Comment, Follow, GamePost
+from .models import UserInfo, Post, Comment, Follow, GamePost, Like
 from gamedata.models import Gamedata, Ladder
 
 
@@ -102,6 +102,43 @@ def toggle_follow(request):
                 'code': 1,
                 'following': following,
                 'follower': follower
+            }, json_dumps_params={'ensure_ascii': False})
+
+
+def toggle_like(request):
+    if request.user:
+        try:
+            post = Post.objects.get(id=request.GET['id'])
+            user = User.objects.get(username=request.user.username)
+            login_user = UserInfo.objects.get(id=user)
+        except Post.DoesNotExist:
+            return JsonResponse({
+                'code': -1
+            }, json_dumps_params={'ensure_ascii': False})
+        except User.DoesNotExist:
+            return JsonResponse({
+                'code': -1
+            }, json_dumps_params={'ensure_ascii': False})
+        except UserInfo.DoesNotExist:
+            return JsonResponse({
+                'code': -1
+            }, json_dumps_params={'ensure_ascii': False})
+
+        try:
+            like = Like.objects.get(post=post, liker=login_user)
+            Like.delete(like)
+            like_num = len(Like.objects.filter(post=post))
+            return JsonResponse({
+                'code': 0,
+                'like_num': like_num
+            }, json_dumps_params={'ensure_ascii': False})
+        except Like.DoesNotExist:
+            like = Like.objects.create(post=post, liker=login_user)
+            like.save()
+            like_num = len(Like.objects.filter(post=post))
+            return JsonResponse({
+                'code': 1,
+                'like_num': like_num
             }, json_dumps_params={'ensure_ascii': False})
 
 
@@ -218,6 +255,8 @@ class GetPost(View):
 
         data = []
         for post in posts:
+            likes = len(Like.objects.filter(post=post))
+
             if post.game_data:
                 is_game_data = True
                 game_data = {'name': post.game_data.game_index.game_name, 'img': post.game_data.game_index.image.url,
@@ -226,7 +265,7 @@ class GetPost(View):
                 is_game_data = False
                 game_data = False
             data.append({
-                'post': {'content': post.content, 'id': post.id, 'date': post.date, 'is_game': is_game_data},
+                'post': {'content': post.content, 'id': post.id, 'date': post.date, 'is_game': is_game_data, "likes": likes},
                 'game_data': game_data
             })
 
@@ -329,8 +368,13 @@ class SignUp(View):
     def post(self, request):
         user = User.objects.create_user(request.POST['id'], request.POST['email'], request.POST['pw'])
         user.save()
+        display_type = request.POST.get("is_dev", None)
+        if display_type in ["yes"]:
+            mode = True
+        else:
+            mode = False
         UserInfo.objects.create(id=user, nickname=request.POST['nickname'], profile=request.FILES['img'],
-                                mode=request.POST['is_dev'], introduce=request.POST['introduce'])
+                                mode=mode, introduce=request.POST['introduce'])
 
         return render(request, 'Auth/Auth.html')
 
