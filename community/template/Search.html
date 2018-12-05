@@ -53,7 +53,7 @@
         <div class="col-2"></div>
         <div class="col-7">
           <div class="buttons">
-            <button type="button" class="nav">Home</button>
+            <button type="button" class="nav" onclick="document.location.href='{% url 'login' %}'">Home</button>
           </div>
           <div class="title"><div class="page-name">CS.GG</div></div>
         </div>
@@ -71,12 +71,14 @@
       <nav class="navbar search-nav">
         <div class="col-2"></div>
         <div class="col-7">
-          <form class="form-inline" method="POST">
+          <form class="form-inline" method="GET" action="{% url 'search' %}">
+              {% csrf_token %}
             <div class="input-group">
               <input
                 type="text"
                 class="form-control search-user"
                 id="searchUser"
+                name="keyword"
                 aria-label="Recipient's username"
                 aria-describedby="button-addon2"
                 value="{{ keyword }}"
@@ -106,91 +108,41 @@
         <!---->
         <div class="row result-row" id="resultRow">
           <div class="col result-element" id="resultElement">
-            <div class="card user-card">
-              <img
-                class="user-card-profileimg"
-                src="https://react.semantic-ui.com/images/wireframe/image.png"
-                alt="Card image cap"
-              />
-              <div class="user-card-block">
-                <h4 class="card-title">User Name</h4>
-                <p class="card-detail-text">Describe Your Detail</p>
-                <a href="#" class="btn btn-secondary">구경 가기</a>
-              </div>
-            </div>
-          </div>
-          <div class="col result-element" id="resultElement">
-            <div class="card user-card">
-              <img
-                class="user-card-profileimg"
-                src="https://react.semantic-ui.com/images/wireframe/image.png"
-                alt="Card image cap"
-              />
-              <div class="user-card-block">
-                <h4 class="card-title">User Name</h4>
-                <p class="card-detail-text">Describe Your Detail</p>
-                <a href="#" class="btn btn-secondary">구경 가기</a>
-              </div>
-            </div>
-          </div>
-          <div class="col result-element" id="resultElement">
-            <div class="card user-card">
-              <img
-                class="user-card-profileimg"
-                src="https://react.semantic-ui.com/images/wireframe/image.png"
-                alt="Card image cap"
-              />
-              <div class="user-card-block">
-                <h4 class="card-title">User Name</h4>
-                <p class="card-detail-text">Describe Your Detail</p>
-                <a href="#" class="btn btn-secondary">구경 가기</a>
-              </div>
-            </div>
+            {% for game in game_list %}
+                <div class="card user-card">
+                      <img
+                        class="user-card-profileimg"
+                        src="{{ game.image.url }}"
+                        alt="Card image cap"
+                      />
+                    <div class="user-card-block">
+                        <h4 class="card-title">{{ game.game_name }}</h4>
+                        <p class="card-detail-text">관리자: {{ game.admin_name.username }}</p>
+                        <a href="{% url 'game' game_name=game.game_name %}" class="btn btn-secondary">구경 가기</a>
+                    </div>
+                </div>
+            {% endfor %}
           </div>
         </div>
         <hr class="hr-text" data-content="유저" />
         <div class="row result-row" id="resultRow">
           <div class="col result-element" id="resultElement">
-            <div class="card user-card">
-              <img
-                class="user-card-profileimg"
-                src="https://react.semantic-ui.com/images/wireframe/image.png"
-                alt="Card image cap"
-              />
-              <div class="user-card-block">
-                <h4 class="card-title">User Name</h4>
-                <p class="card-detail-text">Describe Your Detail</p>
-                <a href="#" class="btn btn-secondary">구경 가기</a>
-              </div>
-            </div>
+            {% for user_info in user_info_list %}
+                <div class="card user-card">
+                      <img
+                        class="user-card-profileimg"
+                        src="{{ user_info.profile.url }}"
+                        alt="Card image cap"
+                      />
+                    <div class="user-card-block">
+                        <h4 class="card-title">{{ user_info.id.username }}</h4>
+                        <p class="card-detail-text">{{ user_info.nickname }}</p>
+                        <p class="card-detail-text">{{ user_info.introduce }}</p>
+                        <a href="{% url 'timeline' user_id=user_info.id.username %}" class="btn btn-secondary">구경 가기</a>
+                    </div>
+                </div>
+            {% endfor %}
           </div>
-          <div class="col result-element" id="resultElement">
-            <div class="card user-card">
-              <img
-                class="user-card-profileimg"
-                src="https://react.semantic-ui.com/images/wireframe/image.png"
-                alt="Card image cap"
-              />
-              <div class="user-card-block">
-                <h4 class="card-title">User Name</h4>
-                <p class="card-detail-text">Describe Your Detail</p>
-                <a href="#" class="btn btn-secondary">구경 가기</a>
-              </div>
-            </div>
-          </div>
-          <div class="col result-element" id="resultElement">
-            <div class="card user-card">
-              <img
-                class="user-card-profileimg"
-                src="https://react.semantic-ui.com/images/wireframe/image.png"
-                alt="Card image cap"
-              />
-              <div class="user-card-block">
-                <h4 class="card-title">User Name</h4>
-                <p class="card-detail-text">Describe Your Detail</p>
-                <a href="#" class="btn btn-secondary">구경 가기</a>
-              </div>
-            </div>
           </div>
         </div>
       </div>

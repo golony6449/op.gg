@@ -281,8 +281,27 @@ class Logout(View):
 
 
 def search(request):
+    params = dict()
+    params['keyword'] = request.GET['keyword']
+
     # TODO: 검색기능 구현
-    print(request.GET['keyword'])
+
+    # 게임 목록
+    game_list = Gamedata.objects.filter(game_name__contains=request.GET['keyword'])
+    params['game_list'] = game_list
+
+    # 유저 검색
+    user_list = User.objects.filter(username__contains=request.GET['keyword'])
+    params['user_list'] = user_list
+
+    user_info_list = list()
+
+    for user in user_list:
+        user_info_list.append(UserInfo.objects.get(id=user))
+    params['user_info_list'] = user_info_list
+
+
+    return render(request, 'Search.html', params)
 
 
 def game_profile(request, game_name):
