@@ -112,7 +112,11 @@
                 <div class="card user-card">
                       <img
                         class="user-card-profileimg"
+                        {% if game.image == null %}
+                        src="https://react.semantic-ui.com/images/wireframe/image.png"
+                        {% else %}
                         src="{{ game.image.url }}"
+                        {% endif %}
                         alt="Card image cap"
                       />
                     <div class="user-card-block">
@@ -131,7 +135,11 @@
                 <div class="card user-card">
                       <img
                         class="user-card-profileimg"
+                        {% if user_info.image == null %}
+                        src="https://react.semantic-ui.com/images/wireframe/image.png"
+                        {% else %}
                         src="{{ user_info.profile.url }}"
+                        {% endif %}
                         alt="Card image cap"
                       />
                     <div class="user-card-block">
