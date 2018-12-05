@@ -372,6 +372,10 @@ def search(request):
         user_info_list.append(UserInfo.objects.get(id=user))
     params['user_info_list'] = user_info_list
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
     return render(request, 'Search.html', params)
 
 

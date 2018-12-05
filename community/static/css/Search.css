@@ -1,0 +1,145 @@
+.fixed-nav-bar {
+  height: 11rem;
+}
+.header {
+  background-color: #f8f9fa;
+  position: fixed;
+  display: flex;
+  width: 100%;
+  z-index: 10000000;
+  align-items: center;
+  height: 4rem;
+  margin: 0 auto;
+  padding: 0rem 0.25rem 0.25rem 2rem;
+  border-bottom: 1px groove #dee2e6;
+}
+
+.header .buttons {
+  display: flex;
+}
+
+.buttons .nav {
+  background-color: #ced4da;
+  border-radius: 5px;
+  padding: 0.3rem 0.8rem 0.3rem 0.8rem;
+  border: none;
+  box-shadow: 0 2px #495057;
+}
+
+.buttons .nav + .nav {
+  margin-left: 0.5rem;
+}
+
+.nav:hover {
+  background-color: #868e96;
+  color: #ffffff;
+}
+
+.header .title {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #000000;
+  margin: 0 auto;
+  text-shadow: -2px -2px #fff, 2px -2px #fff, -2px 2px #fff, 2px 2px #fff;
+}
+.title .page-name {
+  position: fixed;
+  top: 0.7vh;
+  left: 50vw;
+}
+
+.search-title {
+  background-color: #38d9a9;
+  position: absolute;
+  top: 4rem;
+  width: 100%;
+  padding: 0.25rem 0.25rem 0.25rem 2rem;
+}
+.search-title-text-container .search-title-text {
+  color: #ffffff;
+  margin: auto;
+}
+
+.search-nav {
+  position: absolute;
+  top: 7.5rem;
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px #495057;
+}
+
+.input-group {
+  height: 38px;
+}
+
+.input-group .form-control {
+  height: 24px;
+}
+.empty-space {
+  height: 100vh;
+}
+.search-result-container {
+  padding: 1em 2.5em 0 2.5em;
+}
+
+.card {
+  width: 240px;
+  height: 300px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+.user-card-top {
+  background-color: #38d9a9;
+}
+
+.user-card .user-card-profileimg {
+  height: 128px;
+  width: 128px;
+
+  margin: 0 auto;
+}
+.user-card .user-card-block {
+  margin-top: 0.8rem;
+}
+
+.user-card-block .card-detail-text {
+  height: 70px;
+}
+
+hr {
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+.hr-text {
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5rem;
+  opacity: 0.5;
+}
+
+.hr-text:before {
+  content: "";
+  background: linear-gradient(to right, transparent, #818078, transparent);
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+}
+
+.hr-text:after {
+  content: attr(data-content);
+  position: absolute;
+  display: inline-block;
+  left: 50%;
+  top: -1rem;
+  padding: 0 0.5em;
+  line-height: 1.5em;
+  font-size: 2rem;
+  color: black;
+  background-color: #f1f3f5;
+}

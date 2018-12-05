@@ -1,0 +1,152 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{% static 'css/Default.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/Search.css' %}" />
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+      crossorigin="anonymous"
+    />
+
+    <title>CS.GG 검색 - {{ keyword }}</title>
+  </head>
+  <!--
+    <div class="col-2"></div>
+    <div class="col-7"></div>
+    <div class="col-2"></div>
+  -->
+  <body>
+    <!-- 네비바 -->
+    <div class="fixed-nav-bar">
+      <div class="row header">
+        <div class="col-2"></div>
+        <div class="col-7">
+          <div class="buttons">
+            <button type="button" class="nav" onclick="document.location.href='{% url 'login' %}'">Home</button>
+          </div>
+          <div class="title"><div class="page-name">CS.GG</div></div>
+        </div>
+        <div class="col-2"></div>
+      </div>
+      <div class="row search-title">
+        <div class="col-2"></div>
+        <div class="col-7">
+          <div class="search-title-text-container">
+            <h1 class="search-title-text">검색어 - {{ keyword }}</h1>
+          </div>
+        </div>
+        <div class="col-2"></div>
+      </div>
+      <nav class="navbar search-nav">
+        <div class="col-2"></div>
+        <div class="col-7">
+          <form class="form-inline" method="GET" action="{% url 'search' %}">
+              {% csrf_token %}
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control search-user"
+                id="searchUser"
+                name="keyword"
+                aria-label="Recipient's username"
+                aria-describedby="button-addon2"
+                value="{{ keyword }}"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-primary"
+                  type="submit"
+                  id="button-addon2"
+                >
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-2"></div>
+      </nav>
+    </div>
+
+    <!-- 검색결과창 -->
+    <div class="row">
+      <div class="col-2 empty-space"></div>
+      <div class="col-7 search-result-container">
+        <!-- 구분선 -->
+        <hr class="hr-text" data-content="게임" />
+        <!---->
+        <div class="row result-row" id="resultRow">
+          <div class="col result-element" id="resultElement">
+            {% for game in game_list %}
+                <div class="card user-card">
+                      <img
+                        class="user-card-profileimg"
+                        src="{{ game.image.url }}"
+                        alt="Card image cap"
+                      />
+                    <div class="user-card-block">
+                        <h4 class="card-title">{{ game.game_name }}</h4>
+                        <p class="card-detail-text">관리자: {{ game.admin_name.username }}</p>
+                        <a href="{% url 'game' game_name=game.game_name %}" class="btn btn-secondary">구경 가기</a>
+                    </div>
+                </div>
+            {% endfor %}
+          </div>
+        </div>
+        <hr class="hr-text" data-content="유저" />
+        <div class="row result-row" id="resultRow">
+          <div class="col result-element" id="resultElement">
+            {% for user_info in user_info_list %}
+                <div class="card user-card">
+                      <img
+                        class="user-card-profileimg"
+                        src="{{ user_info.profile.url }}"
+                        alt="Card image cap"
+                      />
+                    <div class="user-card-block">
+                        <h4 class="card-title">{{ user_info.id.username }}</h4>
+                        <p class="card-detail-text">{{ user_info.nickname }}</p>
+                        <p class="card-detail-text">{{ user_info.introduce }}</p>
+                        <a href="{% url 'timeline' user_id=user_info.id.username %}" class="btn btn-secondary">구경 가기</a>
+                    </div>
+                </div>
+            {% endfor %}
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 empty-space"></div>
+    </div>
+  </body>
+</html>

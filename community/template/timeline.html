@@ -80,6 +80,7 @@
         />
     </div>
 
+<<<<<<< HEAD
     <nav class="navbar profile-nav">
         <form class="form-inline" method="POST">
             <button id="follow" type="button" user="{{ page_user.id.username }}" class="btn {% if followed %}Followed{% endif %}" onclick="handleFollowButton()">{% if followed %}Following{% else %}Follow{% endif %}</button>
@@ -100,6 +101,28 @@
                 type="submit"
                 id="button-addon2"
                 >
+=======
+    <!-- 소셜 네트워크 레이아웃 -->
+
+    <nav class="navbar navbar-light bg-white">
+      <a href="#" class="navbar-brand"></a>
+      <form class="form-inline" action="{% url 'search' %}" method="get">
+        <div class="input-group">
+          <input
+            type="text"
+            id="search_keyword"
+            name="keyword"
+            class="form-control"
+            aria-label="Recipient's username"
+            aria-describedby="button-addon2"
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-outline-primary"
+              type="submit"
+              id="button-addon2"
+            >
+>>>>>>> upstream/master
               <i class="fa fa-search"></i>
               </button>
             </div>

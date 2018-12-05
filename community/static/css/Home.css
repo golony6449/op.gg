@@ -63,7 +63,11 @@
 
 .profile-top .profile-image {
   position: absolute;
+<<<<<<< HEAD
   z-index: 1000000;
+=======
+  z-index: 10000000000;
+>>>>>>> upstream/master
   top: 12vh;
   left: 24vh;
   box-shadow: -4px -4px #fff, 4px -4px #fff, -4px 4px #fff, 4px 4px #fff;
@@ -72,7 +76,11 @@
 .profile-container .profile-nav {
   background-color: #f1f2f3;
 }
+<<<<<<< HEAD
 .profile-container #follow {
+=======
+.profile-container .follow {
+>>>>>>> upstream/master
   width: 8rem;
   font-size: 1.25rem;
   font-weight: 900;
@@ -82,12 +90,17 @@
   color: #2bac85;
 }
 
+<<<<<<< HEAD
 .profile-container #follow:hover {
+=======
+.profile-container .follow:hover {
+>>>>>>> upstream/master
   background-color: #38d9a9;
   color: #ffffff;
   border-color: #38d9a9;
 }
 
+<<<<<<< HEAD
 .profile-container #follow[class*="Followed"]{
   background-color: #2bac85;
   border: 1px solid #ffffff;
@@ -95,6 +108,9 @@
 }
 
 .profile-container #btn:active {
+=======
+.profile-container .btn:active {
+>>>>>>> upstream/master
   background-color: #38d9a9;
   color: #ffffff;
   border-color: #38d9a9;
@@ -116,7 +132,21 @@
 #input-post {
   resize: none;
 }
+<<<<<<< HEAD
 
+=======
+.score-card {
+  height: 200px;
+  border: 1px solid #868e96;
+  padding: 1em 1em 1em 1em;
+}
+.score-card .score-card-img {
+  float: left;
+}
+.score-card .score-card-score {
+  float: left;
+}
+>>>>>>> upstream/master
 .btn-more {
   margin: 0.5rem 17.1rem 0 17.1rem;
 }

@@ -38,9 +38,9 @@ class Post(models.Model):
     game_data = models.OneToOneField('gamedata.Ladder', on_delete=models.CASCADE, null=True)
 
 
+# 게임 페이지 내 공지사항
 class GamePost(models.Model):
     content = models.CharField(max_length=120, null=False)
-    poster = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
     date = models.DateTimeField('date published', auto_now_add=True)
     game_data = models.ForeignKey(Gamedata, on_delete=models.CASCADE)
 
