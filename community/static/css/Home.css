@@ -4,17 +4,16 @@
   display: flex;
   width: 100%;
   z-index: 10000000;
-  align-items: center;
   height: 4rem;
   margin: 0 auto;
   padding-left: 3rem;
   padding-right: 3rem;
-
   border-bottom: 1px groove #dee2e6;
 }
 
 .header .buttons {
   display: flex;
+  margin-top: 0.5em;
 }
 
 .buttons .nav {
@@ -43,8 +42,9 @@
 }
 .title .page-name {
   position: fixed;
-  top: 0.7vh;
-  left: 50vw;
+  top: -1vh;
+  left: 47vw;
+  font-size: 1.4em;
 }
 
 .header .search {
@@ -170,6 +170,21 @@ div.score-card-wrapper{
   color: #38d9a9;
   width: 24px;
   height: 24px;
+}
+
+.material-icons.nav-icon.left {
+  text-decoration: none;
+  color: #38d9a9;
+  font-size: 3em;
+  top: -1vh;
+}
+
+.material-icons.nav-icon.right {
+  text-decoration: none;
+  color: #38d9a9;
+  font-size: 3em;
+  top: -1vh;
+  margin-left: 80%;
 }
 
 .material-icons:hover {

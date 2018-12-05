@@ -32,6 +32,7 @@ urlpatterns = [
     path('rest/writeGamePost', WriteGamePost.as_view(), name='writeGamePost'),
     path('auth/checkId', views.check_id, name='check_id'),
     path('auth/toggleFollow', views.toggle_follow, name='toggle_follow'),
+    path('auth/toggleLike', views.toggle_like, name='toggle_like'),
     # path('login', Login.as_view(), name='login'),
     path('logout', Logout.as_view(), name='logout'),
     path('signUp', SignUp.as_view(), name='signUp'),

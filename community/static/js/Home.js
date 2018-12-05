@@ -151,8 +151,8 @@ function randerPost(arr) {
         `</p>
         </div>
         <div class="card-footer">
-          <a href="#" class="card-link">
-          <i class="fa fa-gittip"></i> Like
+          <a class="card-link" id="like_`+arr.post.id+`" onclick="handleLikeButton(`+arr.post.id+`)">
+          <i class="fa fa-gittip"></i> `+arr.post.likes+` Like
           </a>
         </div>
       </div>`
@@ -178,6 +178,25 @@ function handleFollowButton (event) {
             }
             $("#follower").html(obj.follower);
             $("#following").html(obj.following);
+        }
+    })
+}
+
+function handleLikeButton (post_id) {
+    $.ajax({
+        url: "auth/toggleLike?id=" + post_id,
+        type: 'get',
+        success: function (data) {
+            let obj = data;
+            if (obj.code === 0) {
+                $("#like_"+post_id).removeClass('liked');
+                $("#like_"+post_id).html("<i class=\"fa fa-gittip\"></i> "+obj.like_num+" Like");
+            } else if(obj.code === -1){
+                return;
+            } else {
+                $("#like_"+post_id).addClass('liked');
+                $("#like_"+post_id).html("<i class=\"fa fa-gittip\"></i> "+obj.like_num+" Liked");
+            }
         }
     })
 }
