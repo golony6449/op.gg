@@ -43,20 +43,20 @@
       integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
       crossorigin="anonymous"
     />
-      <script>
-          function searchRequest(){
-              keyword = $('#search_keyword').val();
-              window.location.href = '/search?keyword='+keyword;
-          }
-      </script>
   </head>
 
   <body>
     <div class="header">
-      <div class="buttons">
-        <button type="button" class="nav" onclick="window.location.href='{% url 'timeline' user_id=user.get_username %}'">Home</button>
-        <button type="button" class="nav" onclick="window.location.href='{% url 'logout' %}'">logout</button>
-      </div>
+      <div class="buttons" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+            <div class="col-auto mr-auto"><i class="material-icons nav-icon left"
+                                             onclick="window.location.href='{% url 'login' %}'">home</i></div>
+            {% if user.is_authenticated %}
+                <div class="col-auto"><i class="material-icons nav-icon right"
+                                         onclick="window.location.href='{% url 'logout' %}'">lock_open</i></div>
+            {% endif %}
+        </div>
+    </div>
       <div class="title"><div class="page-name">CS.GG</div></div>
     </div>
     <div class="profile-container">
@@ -73,10 +73,6 @@
           class="profile-image"
         />
       </div>
-    </div>
-
-    <!-- 소셜 네트워크 레이아웃 -->
-
     <nav class="navbar navbar-light bg-white">
       <a href="#" class="navbar-brand"></a>
       <form class="form-inline" action="{% url 'search' %}" method="get">
@@ -101,8 +97,8 @@
         </div>
       </form>
     </nav>
+    </div>
 
-    <!---->
     <div class="container-fluid gedf-wrapper">
       <div class="row">
         <div class="col-md-3">
@@ -113,14 +109,6 @@
               <div class="h7">{{ page_user.introduce }}</div>
             </div>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                <div class="h6 text-muted">Followers</div>
-                <div class="h5">{{ follower }}</div>
-              </li>
-              <li class="list-group-item">
-                <div class="h6 text-muted">Following</div>
-                <div class="h5">{{ following }} </div>
-              </li>
                 {% if admin_mode == True %}
               <li class="list-group-item">
                 <div class="h6 text-muted">게임정보</div>
