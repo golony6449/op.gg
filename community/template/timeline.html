@@ -53,11 +53,15 @@
 
 <body>
 <div class="header">
-    <div class="buttons">
-        <i class="material-icons nav-icon left" onclick="window.location.href='{% url 'login' %}'">home</i>
-        {% if user.is_authenticated %}
-        <i class="material-icons nav-icon right" onclick="window.location.href='{% url 'logout' %}'">lock_open</i>
-        {% endif %}
+    <div class="buttons" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+            <div class="col-auto mr-auto"><i class="material-icons nav-icon left"
+                                             onclick="window.location.href='{% url 'login' %}'">home</i></div>
+            {% if user.is_authenticated %}
+                <div class="col-auto"><i class="material-icons nav-icon right"
+                                         onclick="window.location.href='{% url 'logout' %}'">lock_open</i></div>
+            {% endif %}
+        </div>
     </div>
     <div class="title">
         <div class="page-name">CS.GG</div>
