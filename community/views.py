@@ -45,7 +45,7 @@ def timeline(request, user_id):
     follower = len(follower)
 
     # 동일 유저 여부 확인
-    if request.user == user_obj:
+    if UserInfo.objects.get(id=request.user).mode == True:
         admin_mode = True
     else:
         admin_mode = False
