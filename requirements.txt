@@ -22,7 +22,7 @@ djangorestframework==3.8.2
 docutils==0.14
 fake-useragent==0.1.11
 gensim==3.4.0
-httpie==0.9.9
+httpie==1.0.3
 idna==2.7
 itypes==1.1.0
 Jinja2==2.10
