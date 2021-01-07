@@ -29,7 +29,7 @@ Jinja2==2.10
 jmespath==0.9.3
 JPype1==0.6.3
 konlpy==0.5.1
-lxml==4.2.5
+lxml==4.6.2
 MarkupSafe==1.0
 mkl-fft==1.0.4
 mkl-random==1.0.1
