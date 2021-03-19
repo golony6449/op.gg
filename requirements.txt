@@ -18,7 +18,7 @@ django-cron==0.5.1
 django-rest-swagger==2.2.0
 django-snippets==0.1.2
 django-webpack-loader==0.6.0
-djangorestframework==3.8.2
+djangorestframework==3.11.2
 docutils==0.14
 fake-useragent==0.1.11
 gensim==3.4.0
