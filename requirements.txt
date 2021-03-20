@@ -25,7 +25,7 @@ gensim==3.4.0
 httpie==0.9.9
 idna==2.7
 itypes==1.1.0
-Jinja2==2.10
+Jinja2==2.11.3
 jmespath==0.9.3
 JPype1==0.6.3
 konlpy==0.5.1
