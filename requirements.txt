@@ -52,7 +52,7 @@ simplejson==3.16.0
 six==1.11.0
 smart-open==1.6.0
 uritemplate==3.0.0
-urllib3==1.23
+urllib3==1.26.5
 win-inet-pton==1.0.1
 wincertstore==0.2
 xvfbwrapper==0.2.9
